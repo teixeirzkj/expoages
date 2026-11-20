@@ -3,7 +3,7 @@
 Plataforma acadêmica da disciplina **Gestão de Comportamento de Pessoas**, aplicada à empresa fictícia
 **Horizonte Soluções Integradas Ltda.** Reúne site público, ouvidoria anônima com protocolo, reconhecimentos e
 feedbacks, pesquisa de percepção, inscrição em cursos profissionalizantes, painel administrativo com plano de ações e
-um modo de demonstração para a ExpoAgro.
+um modo de demonstração para a ExpoAGES.
 
 > A empresa e todos os dados de exemplo são fictícios. Nenhum indicador exibido representa resultado real.
 

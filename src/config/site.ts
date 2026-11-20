@@ -48,7 +48,7 @@ export const siteConfig = {
       "Kauan Lucas",
       "Sofia Vitória",
     ] as string[],
-    event: "ExpoAgro",
+    event: "ExpoAGES",
     year: "2026",
   },
 

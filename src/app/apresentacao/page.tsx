@@ -29,7 +29,7 @@ export default function PresentationPage() {
         <div className="container-editorial flex flex-col gap-10 py-10 md:py-14">
           <div className="flex items-center justify-between gap-4">
             <Logo tone="light" />
-            <span className="rounded-full bg-sky px-3 py-1 text-xs font-semibold text-navy">ExpoAgro</span>
+            <span className="rounded-full bg-sky px-3 py-1 text-xs font-semibold text-navy">ExpoAGES</span>
           </div>
           <div className="max-w-3xl">
             <p className="eyebrow text-sky">Modo apresentação</p>
