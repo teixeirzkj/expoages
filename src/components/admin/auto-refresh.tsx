@@ -2,7 +2,7 @@
 
 import { RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -13,10 +13,17 @@ export function AutoRefresh({ seconds = 12 }: { seconds?: number }) {
   const router = useRouter();
   const [pending, start] = useTransition();
   const [last, setLast] = useState<string>("");
+  const busy = useRef(false);
+  useEffect(() => {
+    busy.current = pending;
+  }, [pending]);
 
   useEffect(() => {
     const tick = () => {
-      if (document.visibilityState !== "visible") return;
+      if (document.visibilityState !== "visible" || busy.current) return;
+      // Não atualiza enquanto a pessoa digita ou escolhe algo num formulário.
+      const el = document.activeElement;
+      if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT")) return;
       start(() => router.refresh());
       setLast(new Date().toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
     };

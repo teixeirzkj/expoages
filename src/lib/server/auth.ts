@@ -1,5 +1,6 @@
 import "server-only";
 import { redirect } from "next/navigation";
+import { cache } from "react";
 import { createSessionClient } from "./supabase";
 
 export interface AdminUser {
@@ -12,8 +13,9 @@ export interface AdminUser {
  * Data Access Layer de autenticação. Valida a sessão no servidor de Auth
  * (getUser, não apenas o cookie) e confirma que o usuário está em
  * admin_profiles. Retorna null quando não autorizado.
+ * Memorizado por requisição (cache): layout, menu e tela não repetem a consulta.
  */
-export async function getAdmin(): Promise<AdminUser | null> {
+export const getAdmin = cache(async function getAdmin(): Promise<AdminUser | null> {
   const supabase = await createSessionClient();
   if (!supabase) return null;
   const { data, error } = await supabase.auth.getUser();
@@ -25,7 +27,7 @@ export async function getAdmin(): Promise<AdminUser | null> {
     .maybeSingle();
   if (!profile) return null;
   return { id: data.user.id, email: data.user.email ?? "", displayName: profile.display_name };
-}
+});
 
 /** Uso em páginas e ações administrativas: redireciona se não autorizado. */
 export async function requireAdmin(): Promise<AdminUser> {
@@ -44,7 +46,7 @@ export interface EmployeeUser {
  * Colaborador autenticado: sessão válida no Supabase Auth + perfil em
  * employee_profiles (lido com a própria sessão, sob RLS). Null se não for.
  */
-export async function getEmployeeUser(): Promise<EmployeeUser | null> {
+export const getEmployeeUser = cache(async function getEmployeeUser(): Promise<EmployeeUser | null> {
   const supabase = await createSessionClient();
   if (!supabase) return null;
   const { data, error } = await supabase.auth.getUser();
@@ -56,7 +58,7 @@ export async function getEmployeeUser(): Promise<EmployeeUser | null> {
     .maybeSingle();
   if (!profile) return null;
   return { id: data.user.id, email: data.user.email ?? "", fullName: profile.full_name };
-}
+});
 
 export async function requireEmployee(): Promise<EmployeeUser> {
   const employee = await getEmployeeUser();
