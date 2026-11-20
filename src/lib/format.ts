@@ -22,3 +22,11 @@ export function formatShortDate(iso: string) {
 export function truncate(text: string, max = 110) {
   return text.length > max ? `${text.slice(0, max).trimEnd()}…` : text;
 }
+
+/** Converte texto com uma ideia por linha em itens de lista (remove "-", "•", "*"). */
+export function toBullets(text: string) {
+  return text
+    .split(/\r?\n/)
+    .map((l) => l.replace(/^\s*[-•*]\s*/, "").trim())
+    .filter(Boolean);
+}

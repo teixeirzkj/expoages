@@ -60,6 +60,9 @@ export function PresenterDock() {
       >
         <GraduationCap className="size-4" /> Cursos
       </button>
+      <Link href="/colaborador/demo" className="flex h-11 shrink-0 items-center gap-2 rounded-full px-3.5 text-sm font-medium text-cream/80 hover:bg-cream/10 hover:text-cream">
+        Meu Feedback
+      </Link>
       <Link href="/demo" className="flex h-11 shrink-0 items-center gap-2 rounded-full bg-sky px-4 text-sm font-semibold text-navy">
         <LayoutDashboard className="size-4" /> Painel demo
       </Link>

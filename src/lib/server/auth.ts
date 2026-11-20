@@ -33,3 +33,33 @@ export async function requireAdmin(): Promise<AdminUser> {
   if (!admin) redirect("/admin/login");
   return admin;
 }
+
+export interface EmployeeUser {
+  id: string;
+  email: string;
+  fullName: string;
+}
+
+/**
+ * Colaborador autenticado: sessão válida no Supabase Auth + perfil em
+ * employee_profiles (lido com a própria sessão, sob RLS). Null se não for.
+ */
+export async function getEmployeeUser(): Promise<EmployeeUser | null> {
+  const supabase = await createSessionClient();
+  if (!supabase) return null;
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) return null;
+  const { data: profile } = await supabase
+    .from("employee_profiles")
+    .select("full_name")
+    .eq("user_id", data.user.id)
+    .maybeSingle();
+  if (!profile) return null;
+  return { id: data.user.id, email: data.user.email ?? "", fullName: profile.full_name };
+}
+
+export async function requireEmployee(): Promise<EmployeeUser> {
+  const employee = await getEmployeeUser();
+  if (!employee) redirect("/colaborador/entrar");
+  return employee;
+}

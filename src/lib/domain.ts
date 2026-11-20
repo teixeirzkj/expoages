@@ -248,3 +248,83 @@ export interface EnrollmentFilters {
   status?: EnrollmentStatus;
   q?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Avaliações profissionais (feedback da GESTÃO para o colaborador)
+// Identificadas e privadas — totalmente separadas da ouvidoria anônima.
+// ---------------------------------------------------------------------------
+
+export const REVIEW_STATUSES = {
+  rascunho: "Rascunho",
+  publicado: "Publicado",
+} as const;
+export type ReviewStatus = keyof typeof REVIEW_STATUSES;
+
+export const MONTHS = [
+  "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+  "julho", "agosto", "setembro", "outubro", "novembro", "dezembro",
+] as const;
+
+export const REVIEW_LIMITS = { section: 2000, message: 1500, goal: 160, goals: 3, name: 80 } as const;
+
+export interface EmployeeProfile {
+  id: string;
+  fullName: string;
+  email: string;
+  area: string | null;
+  createdAt: string;
+}
+
+export interface ReviewSummary {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  month: number; // 1–12
+  year: number;
+  status: ReviewStatus;
+  reviewerName: string | null;
+  publishedAt: string | null;
+  viewedAt: string | null;
+  acknowledgedAt: string | null;
+  updatedAt: string;
+}
+
+export interface ReviewDetail extends ReviewSummary {
+  strengths: string;
+  improvements: string;
+  recommendations: string;
+  goals: string[];
+  suggestedCourse: CourseKey | null;
+  managerMessage: string | null;
+  createdAt: string;
+}
+
+export interface ReviewRevision {
+  id: string;
+  reviewId: string;
+  note: string;
+  snapshot: Pick<ReviewDetail, "strengths" | "improvements" | "recommendations" | "goals" | "managerMessage" | "suggestedCourse">;
+  createdAt: string;
+}
+
+export interface EmployeeNotification {
+  id: string;
+  title: string;
+  body: string;
+  reviewId: string | null;
+  createdAt: string;
+  readAt: string | null;
+}
+
+export interface ReviewFilters {
+  employeeId?: string;
+  year?: number;
+  month?: number;
+  status?: ReviewStatus;
+  q?: string;
+}
+
+export function periodLabel(month: number, year: number) {
+  const m = MONTHS[month - 1] ?? "";
+  return `${m.charAt(0).toUpperCase()}${m.slice(1)} de ${year}`;
+}

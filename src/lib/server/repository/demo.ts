@@ -13,6 +13,7 @@ import {
 } from "@/lib/domain";
 import { buildDemoState, type DemoState } from "@/lib/demo/seed";
 import type { Repository } from "./types";
+import { demoReviewMethods } from "./demo-reviews";
 
 /**
  * Armazenamento demonstrativo em MEMÓRIA DO SERVIDOR.
@@ -236,4 +237,5 @@ export const demoRepository: Repository = {
     const s = state();
     s.enrollments = s.enrollments.filter((e) => e.id !== id);
   },
+  ...demoReviewMethods(state),
 };

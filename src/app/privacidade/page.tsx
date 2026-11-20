@@ -19,6 +19,10 @@ const SECTIONS = [
     p: "A inscrição em cursos profissionalizantes é o único formulário identificado: pede nome, e-mail, curso, turno e, opcionalmente, a área. Esses dados são usados apenas para o contato sobre o curso, mediante sua autorização, ficam em uma tabela separada das mensagens anônimas e só a gestão autorizada pode lê-los ou excluí-los. Para pedir a exclusão, fale com a coordenação do programa.",
   },
   {
+    h: "Meu Feedback (avaliações da gestão)",
+    p: "Colaboradores com conta criada pela gestão podem consultar as próprias avaliações profissionais. Cada pessoa vê apenas as avaliações publicadas para ela; rascunhos ficam visíveis só para a gestão. São registrados a data da primeira visualização e a confirmação de leitura, que indica ciência e não concordância. Essas contas e avaliações não têm nenhuma relação com a ouvidoria anônima nem com as inscrições em cursos.",
+  },
+  {
     h: "O que a aplicação não grava",
     p: "A aplicação não grava endereço IP, identificador do aparelho ou “fingerprint” do navegador. Para limitar abusos, o servidor mantém por alguns minutos, apenas em memória, um código derivado e embaralhado do endereço de rede, que é descartado automaticamente e nunca vai para o banco de dados.",
   },

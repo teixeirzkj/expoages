@@ -1,10 +1,12 @@
 "use client";
 
 import {
+  CalendarDays,
   ChartColumn,
+  ClipboardCheck,
+  Target,
   EyeOff,
   GraduationCap,
-  HandHeart,
   KeyRound,
   Lock,
   Mail,
@@ -16,15 +18,17 @@ import {
   Activity,
   type LucideIcon,
 } from "lucide-react";
-import { useCallback, useRef, useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { siteConfig } from "@/config/site";
 import { Reveal } from "@/components/motion/reveal";
 import { EnrollmentForm } from "@/components/forms/enrollment-form";
-import { FeedbackForm } from "@/components/forms/feedback-form";
 import { OuvidoriaForm } from "@/components/forms/ouvidoria-form";
 import { useParticipation, type ParticipeTab } from "@/components/forms/participation";
 import { PulseForm } from "@/components/forms/pulse-form";
+import { useCookieFlag } from "@/components/layout/use-cookie-flag";
+import { DEMO_COOKIE } from "@/lib/demo/constants";
 import { cn } from "@/lib/utils";
+import { MyFeedbackPanel } from "./my-feedback-panel";
 
 const TABS: {
   id: ParticipeTab;
@@ -53,17 +57,16 @@ const TABS: {
   },
   {
     id: "feedback",
-    label: "Reconhecimento e feedback",
-    mobileLabel: "Reconhecimento",
-    hint: "Anônimo",
-    mobileHint: "e feedback · anônimo",
-    icon: HandHeart,
-    title: "Reconhecer também é cuidar.",
-    text: "Valorize uma equipe ou prática, ou sugira uma melhoria de forma construtiva.",
+    label: "Meu Feedback",
+    hint: "Acompanhe seu desenvolvimento profissional.",
+    mobileHint: "Área do colaborador",
+    icon: ClipboardCheck,
+    title: "Seu desenvolvimento importa.",
+    text: "Consulte os feedbacks da gestão, conheça seus pontos fortes e descubra oportunidades para continuar evoluindo.",
     points: [
-      { icon: Users, title: "Áreas, não pessoas", text: "Nesta versão não é possível avaliar alguém pelo nome." },
-      { icon: ShieldCheck, title: "Nada é publicado", text: "A gestão decide como compartilhar um reconhecimento." },
-      { icon: KeyRound, title: "Com protocolo", text: "Acompanhe a devolutiva sem se identificar." },
+      { icon: Lock, title: "Privado", text: "Cada colaborador vê apenas as próprias avaliações." },
+      { icon: CalendarDays, title: "Mensal", text: "A gestão publica um relatório por período." },
+      { icon: Target, title: "Metas e cursos", text: "Recomendações ligadas aos cursos da plataforma." },
     ],
   },
   {
@@ -98,12 +101,19 @@ const TABS: {
   },
 ];
 
-export function Participate() {
+export function Participate({ demoForced = false }: { demoForced?: boolean }) {
   const { tab, selectTab, openTracker } = useParticipation();
+  const demo = useCookieFlag(DEMO_COOKIE) || demoForced;
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  // Remonta um formulário após o envio, para que o próximo visitante comece do zero.
-  const [instances, setInstances] = useState({ ouvidoria: 0, feedback: 0 });
-  const reset = useCallback((k: "ouvidoria" | "feedback") => setInstances((s) => ({ ...s, [k]: s[k] + 1 })), []);
+  // Remonta a ouvidoria após o envio, para que o próximo visitante comece do zero.
+  const [instance, setInstance] = useState(0);
+  const reset = useCallback(() => setInstance((n) => n + 1), []);
+
+  // Links como /?aba=cursos#participe (ex.: "curso recomendado" no Meu Feedback).
+  useEffect(() => {
+    const aba = new URLSearchParams(window.location.search).get("aba");
+    if (aba && TABS.some((t) => t.id === aba)) selectTab(aba as ParticipeTab);
+  }, [selectTab]);
 
   const onKey = (e: KeyboardEvent<HTMLButtonElement>, i: number) => {
     const delta = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
@@ -224,21 +234,13 @@ export function Participate() {
               <div className="mt-7 min-w-0">
                 {t.id === "ouvidoria" && (
                   <OuvidoriaForm
-                    key={instances.ouvidoria}
+                    key={instance}
                     onTrack={openTracker}
-                    onClose={() => reset("ouvidoria")}
+                    onClose={reset}
                     closeLabel="Enviar outra mensagem"
                   />
                 )}
-                {t.id === "feedback" && (
-                  <FeedbackForm
-                    key={instances.feedback}
-                    initialKind="reconhecimento"
-                    onTrack={openTracker}
-                    onClose={() => reset("feedback")}
-                    closeLabel="Enviar outro feedback"
-                  />
-                )}
+                {t.id === "feedback" && <MyFeedbackPanel demo={demo} />}
                 {t.id === "pulso" && <PulseForm />}
                 {t.id === "cursos" && <EnrollmentForm />}
               </div>

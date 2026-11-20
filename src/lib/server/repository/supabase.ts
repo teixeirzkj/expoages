@@ -20,6 +20,7 @@ import {
 } from "@/lib/domain";
 import { createAnonClient, createSessionClient } from "../supabase";
 import { RepositoryError, type Repository } from "./types";
+import { supabaseReviewMethods } from "./supabase-reviews";
 
 const OUV_COLS = "id, reference, category, topic, description, impact, status, created_at, updated_at";
 const FB_COLS = "id, reference, kind, topic, area, message, rating, status, created_at, updated_at";
@@ -320,4 +321,5 @@ export const supabaseRepository: Repository = {
     const { error } = await db.from("course_enrollments").delete().eq("id", id);
     if (error) fail("delete enrollment", error);
   },
+  ...supabaseReviewMethods,
 };

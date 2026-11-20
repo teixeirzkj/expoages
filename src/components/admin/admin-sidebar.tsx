@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import {
   Activity,
   ChartColumn,
+  ClipboardCheck,
   ExternalLink,
   GraduationCap,
   LayoutDashboard,
@@ -24,7 +25,8 @@ import { cn } from "@/lib/utils";
 const ITEMS = [
   { href: "", label: "Visão geral", icon: LayoutDashboard },
   { href: "/ouvidoria", label: "Ouvidoria", icon: Inbox },
-  { href: "/feedbacks", label: "Feedbacks", icon: MessageSquareHeart },
+  { href: "/avaliacoes", label: "Avaliações profissionais", icon: ClipboardCheck },
+  { href: "/feedbacks", label: "Feedbacks anônimos", icon: MessageSquareHeart },
   { href: "/pulso", label: "Pulso organizacional", icon: Activity },
   { href: "/acoes", label: "Plano de ações", icon: SquareKanban },
   { href: "/cursos", label: "Cursos", icon: GraduationCap },

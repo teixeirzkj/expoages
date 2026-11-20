@@ -60,8 +60,9 @@ Copie `.env.example` para `.env.local` e preencha:
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
 2. Abra **SQL Editor** e execute, nesta ordem, [`supabase/migrations/20261120000000_init.sql`](supabase/migrations/20261120000000_init.sql)
-   e [`supabase/migrations/20261121000000_course_enrollments.sql`](supabase/migrations/20261121000000_course_enrollments.sql)
-   (a segunda só adiciona a tabela de inscrições; não altera nada existente).
+   , [`supabase/migrations/20261121000000_course_enrollments.sql`](supabase/migrations/20261121000000_course_enrollments.sql)
+   e [`supabase/migrations/20261122000000_professional_reviews.sql`](supabase/migrations/20261122000000_professional_reviews.sql)
+   (as duas últimas só adicionam tabelas; não alteram nada existente).
    (Ou, com a Supabase CLI: `supabase link` e `supabase db push`.)
 3. Em **Authentication → Providers → Email**, mantenha o login por e-mail e **desative “Allow new users to sign up”**
    (Authentication → Sign In / Providers). Assim ninguém cria conta pela API.
@@ -88,6 +89,25 @@ values ('COLE-O-USER-UID-AQUI', 'Nome de exibição');
 
 Para remover um acesso: `delete from public.admin_profiles where user_id = '…';`
 Uma conta que existe no Auth mas não está em `admin_profiles` não acessa nada.
+
+## 4b. Contas de colaboradores (Meu Feedback)
+
+A aba **Meu Feedback** mostra a cada colaborador as avaliações mensais publicadas pela gestão para ele.
+
+1. No Supabase: **Authentication → Users → Add user → Create new user** (e-mail + senha, marque “Auto Confirm User”).
+2. No painel `/admin`, em **Avaliações profissionais → Colaboradores**, informe nome, o mesmo e-mail e a área e
+   clique em **Vincular colaborador** (usa a função `register_employee`, restrita a administradores).
+3. O colaborador entra em `/colaborador/entrar` e vê somente as próprias avaliações **publicadas**.
+
+Regras garantidas no banco (RLS) e no servidor: rascunhos nunca aparecem ao colaborador; um colaborador não lê
+avaliações, notificações ou perfis de outros (um id alterado na URL retorna 404); colaborador não acessa `/admin`;
+“Marcar como lido” só registra ciência (funções `acknowledge_review` / `mark_review_viewed`). Correções de avaliações
+publicadas exigem um motivo e guardam a versão anterior em `review_revisions`. Notificações são internas
+(`employee_notifications`); a coluna `email_sent_at` fica reservada para uma integração real de e-mail no futuro —
+nenhum e-mail é enviado hoje.
+
+O antigo feedback anônimo entre colegas (`feedback_submissions`) foi retirado do site, mas os registros continuam
+preservados e visíveis no painel em **Feedbacks anônimos**. Nada foi convertido em avaliação.
 
 ## 5. Acessar o painel
 

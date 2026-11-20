@@ -17,6 +17,7 @@ const SCRIPT = [
   { t: "Mostrar a manifestação", d: "Em Ouvidoria, abra o registro recém-enviado: conteúdo anônimo, sem nome, e-mail ou telefone." },
   { t: "Alterar o status", d: "Avance para “Em análise” e depois “Ação planejada”. O histórico registra cada mudança." },
   { t: "Responder e criar uma ação", d: "Escreva uma resposta vinculada ao protocolo e use “Criar ação de melhoria”. Volte ao iPad e consulte o protocolo: a resposta aparece." },
+  { t: "Meu Feedback (gestão → colaborador)", d: "Em Avaliações profissionais, abra o rascunho de Mariana Costa (ou crie um para Beatriz Lima) e toque em Publicar. Depois use “Ver como colaborador”: a notificação aparece, o relatório abre com pontos positivos, de melhoria, metas e curso recomendado, e o histórico fica abaixo." },
   { t: "Gráficos, ações e cursos", d: "Mostre Visão geral, Pulso, o Plano de ações em Kanban e as inscrições em Cursos. Finalize com: “Valorizar pessoas começa por ouvi-las.”" },
 ];
 
@@ -34,7 +35,7 @@ export default function PresentationPage() {
             <p className="eyebrow text-sky">Modo apresentação</p>
             <h1 className="display-lg mt-4">Roteiro para quem apresenta.</h1>
             <p className="lead mt-4 text-cream/70">
-              Prepare cada aparelho, siga as dez etapas e reinicie a demonstração entre grupos de visitantes.
+              Prepare cada aparelho, siga as etapas e reinicie a demonstração entre grupos de visitantes.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

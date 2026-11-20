@@ -6,12 +6,19 @@
 import type {
   ActionPlan,
   CourseEnrollment,
+  EmployeeNotification,
+  EmployeeProfile,
+  ReviewDetail,
+  ReviewRevision,
   FeedbackRecord,
   OuvidoriaRecord,
   PulseResponse,
   SubmissionStatus,
   TimelineEntry,
 } from "@/lib/domain";
+import { MONTHS } from "@/lib/domain";
+
+const periodMonth = (m: number) => MONTHS[m - 1] ?? "";
 
 type SeedOuvidoria = Omit<OuvidoriaRecord, "id" | "reference" | "createdAt" | "updatedAt" | "kind">;
 type SeedFeedback = Omit<FeedbackRecord, "id" | "reference" | "createdAt" | "updatedAt" | "kind">;
@@ -95,6 +102,76 @@ const ENROLLMENTS: Omit<CourseEnrollment, "id" | "createdAt">[] = [
   { fullName: "Pessoa Exemplo F", email: "pessoa.f@example.com", course: "oratoria", shift: "manha", area: "Qualidade e monitoria", status: "recebida" },
 ];
 
+/** Colaboradores e avaliações FICTÍCIOS (domínio reservado example.com). */
+const EMPLOYEES: Omit<EmployeeProfile, "createdAt">[] = [
+  { id: "demo-emp-lucas", fullName: "Lucas Almeida", email: "lucas.almeida@example.com", area: "Atendimento receptivo" },
+  { id: "demo-emp-mariana", fullName: "Mariana Costa", email: "mariana.costa@example.com", area: "Qualidade e monitoria" },
+  { id: "demo-emp-rafael", fullName: "Rafael Souza", email: "rafael.souza@example.com", area: "Atendimento ativo" },
+  { id: "demo-emp-beatriz", fullName: "Beatriz Lima", email: "beatriz.lima@example.com", area: "Back-office" },
+];
+
+type SeedReview = Omit<ReviewDetail, "id" | "employeeName" | "createdAt" | "updatedAt" | "publishedAt" | "viewedAt" | "acknowledgedAt"> & {
+  ageDays: number;
+  read?: "none" | "viewed" | "acknowledged";
+};
+
+const REVIEWS: SeedReview[] = [
+  {
+    employeeId: "demo-emp-lucas", month: 11, year: 2026, status: "publicado", reviewerName: "Coordenação de Atendimento", ageDays: 1, read: "none",
+    strengths: "Boa comunicação com a equipe.\nComprometimento com as atividades.\nOrganização no atendimento.",
+    improvements: "Aprimorar a organização das prioridades.\nDesenvolver maior autonomia em situações específicas.",
+    recommendations: "Participar de atividades de desenvolvimento.\nDefinir objetivos para o próximo mês.",
+    goals: ["Planejar o início de cada turno listando as três prioridades do dia.", "Resolver um caso complexo por semana com autonomia, registrando o aprendizado."],
+    suggestedCourse: "rotinas_administrativas",
+    managerMessage: "Lucas, sua evolução neste mês foi visível. Conte com a coordenação para apoiar as próximas metas.",
+  },
+  {
+    employeeId: "demo-emp-lucas", month: 10, year: 2026, status: "publicado", reviewerName: "Coordenação de Atendimento", ageDays: 31, read: "acknowledged",
+    strengths: "Cordialidade constante com os clientes.\nPontualidade e assiduidade.",
+    improvements: "Registrar os atendimentos com mais detalhes.\nPedir apoio mais cedo em casos difíceis.",
+    recommendations: "Acompanhar um colega experiente em dois turnos.",
+    goals: ["Revisar os registros do dia antes de encerrar o turno."],
+    suggestedCourse: null,
+    managerMessage: null,
+  },
+  {
+    employeeId: "demo-emp-lucas", month: 9, year: 2026, status: "publicado", reviewerName: "Coordenação de Atendimento", ageDays: 61, read: "acknowledged",
+    strengths: "Rápida adaptação aos novos roteiros.\nBoa relação com a equipe.",
+    improvements: "Ganhar segurança ao explicar procedimentos técnicos.",
+    recommendations: "Estudar a base de conhecimento dos produtos mais procurados.",
+    goals: [],
+    suggestedCourse: "informatica_basica",
+    managerMessage: null,
+  },
+  {
+    employeeId: "demo-emp-mariana", month: 11, year: 2026, status: "rascunho", reviewerName: "Gestão de Qualidade", ageDays: 0,
+    strengths: "Análises de monitoria muito bem fundamentadas.\nEmpatia ao dar devolutivas à equipe.",
+    improvements: "Apresentar os resultados em reuniões com mais confiança.",
+    recommendations: "Conduzir a próxima reunião mensal de qualidade.",
+    goals: ["Preparar uma apresentação curta com os destaques do mês."],
+    suggestedCourse: "oratoria",
+    managerMessage: null,
+  },
+  {
+    employeeId: "demo-emp-mariana", month: 10, year: 2026, status: "publicado", reviewerName: "Gestão de Qualidade", ageDays: 30, read: "viewed",
+    strengths: "Organização exemplar dos relatórios.\nIniciativa para propor melhorias no roteiro.",
+    improvements: "Equilibrar o tempo entre análises e acompanhamento da equipe.",
+    recommendations: "Reservar um horário fixo semanal para devolutivas individuais.",
+    goals: [],
+    suggestedCourse: null,
+    managerMessage: null,
+  },
+  {
+    employeeId: "demo-emp-rafael", month: 10, year: 2026, status: "publicado", reviewerName: "Coordenação de Atendimento Ativo", ageDays: 29, read: "none",
+    strengths: "Persistência e foco nas metas da campanha.\nBom domínio dos argumentos de venda.",
+    improvements: "Ouvir mais o cliente antes de apresentar a oferta.",
+    recommendations: "Praticar escuta ativa em simulações com a supervisão.",
+    goals: ["Aplicar perguntas abertas no início de cada ligação."],
+    suggestedCourse: "oratoria",
+    managerMessage: null,
+  },
+];
+
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 export interface DemoState {
@@ -104,6 +181,10 @@ export interface DemoState {
   actions: ActionPlan[];
   timeline: Record<string, TimelineEntry[]>;
   enrollments: CourseEnrollment[];
+  employees: EmployeeProfile[];
+  reviews: ReviewDetail[];
+  revisions: ReviewRevision[];
+  notifications: (EmployeeNotification & { employeeId: string })[];
   secrets: Record<string, string>; // reference -> secretHash
 }
 
@@ -168,5 +249,34 @@ export function buildDemoState(now = Date.now()): DemoState {
     createdAt: new Date(now - (1 + i * 3) * DAY - Math.floor(rand() * DAY)).toISOString(),
   }));
 
-  return { ouvidoria, feedback, pulse, actions, timeline, enrollments, secrets: {} };
+  const employees = EMPLOYEES.map((e, i): EmployeeProfile => ({ ...e, createdAt: new Date(now - (120 - i * 7) * DAY).toISOString() }));
+  const nameOf = (id: string) => employees.find((e) => e.id === id)?.fullName ?? "";
+  const reviews = REVIEWS.map(({ ageDays, read, ...r }, i): ReviewDetail => {
+    const created = now - (ageDays + 2) * DAY;
+    const published = r.status === "publicado" ? new Date(now - ageDays * DAY).toISOString() : null;
+    const viewed = published && read !== "none" ? new Date(now - ageDays * DAY + 6 * 3_600_000).toISOString() : null;
+    return {
+      ...r,
+      id: id("rev", i),
+      employeeName: nameOf(r.employeeId),
+      createdAt: new Date(created).toISOString(),
+      updatedAt: published ?? new Date(created).toISOString(),
+      publishedAt: published,
+      viewedAt: viewed,
+      acknowledgedAt: read === "acknowledged" ? viewed : null,
+    };
+  });
+  const notifications = reviews
+    .filter((r) => r.status === "publicado")
+    .map((r) => ({
+      id: `notif-${r.id}`,
+      employeeId: r.employeeId,
+      title: `Seu feedback de ${periodMonth(r.month)} está disponível!`,
+      body: "A gestão compartilhou uma nova avaliação sobre seu desenvolvimento profissional.",
+      reviewId: r.id,
+      createdAt: r.publishedAt!,
+      readAt: r.viewedAt,
+    }));
+
+  return { ouvidoria, feedback, pulse, actions, timeline, enrollments, employees, reviews, revisions: [], notifications, secrets: {} };
 }

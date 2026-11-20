@@ -10,6 +10,7 @@ import {
   FEEDBACK_KINDS,
   LIMITS,
   OUVIDORIA_CATEGORIES,
+  REVIEW_LIMITS,
   SUBMISSION_STATUSES,
 } from "./domain";
 
@@ -96,6 +97,43 @@ export const enrollmentSchema = z.object({
 });
 export type EnrollmentInput = z.infer<typeof enrollmentSchema>;
 export const enrollmentStatusSchema = z.enum(keysOf(ENROLLMENT_STATUSES));
+
+/** Avaliação profissional preparada pela gestão. */
+const longText = (max: number, label: string, min = 0) =>
+  z
+    .string()
+    .transform(cleanText)
+    .pipe(min ? z.string().min(min, `Preencha ${label}.`).max(max, `Use no máximo ${max} caracteres.`) : z.string().max(max, `Use no máximo ${max} caracteres.`));
+
+export const reviewSchema = z.object({
+  employeeId: z.string().min(8).max(64).regex(/^[0-9a-zA-Z-]+$/, "Escolha um colaborador."),
+  month: z.coerce.number().int().min(1, "Escolha o mês.").max(12, "Escolha o mês."),
+  year: z.coerce.number().int().min(2020, "Ano inválido.").max(2100, "Ano inválido."),
+  strengths: longText(REVIEW_LIMITS.section, "os pontos positivos", 5),
+  improvements: longText(REVIEW_LIMITS.section, "os pontos de melhoria", 5),
+  recommendations: longText(REVIEW_LIMITS.section, "as recomendações"),
+  goals: z
+    .array(z.string().transform(cleanText).pipe(z.string().max(REVIEW_LIMITS.goal, `Cada meta pode ter até ${REVIEW_LIMITS.goal} caracteres.`)))
+    .max(REVIEW_LIMITS.goals)
+    .transform((g) => g.filter(Boolean)),
+  suggestedCourse: z
+    .union([z.enum(keysOf(COURSES)), z.literal(""), z.null(), z.undefined()])
+    .transform((v) => (v ? v : null)),
+  managerMessage: longText(REVIEW_LIMITS.message, "a mensagem").transform((v) => (v ? v : null)),
+  reviewerName: longText(REVIEW_LIMITS.name, "o responsável").transform((v) => (v ? v : null)),
+  /** Obrigatório ao corrigir uma avaliação já publicada (fica no histórico). */
+  revisionNote: longText(300, "o motivo da correção").optional(),
+});
+export type ReviewInput = z.infer<typeof reviewSchema>;
+
+export const employeeSchema = z.object({
+  fullName: text(3, REVIEW_LIMITS.name, "o nome"),
+  email: z.string().trim().toLowerCase().pipe(z.email("Informe um e-mail válido.").max(120)),
+  area: z
+    .union([z.enum(AREAS), z.literal(""), z.null(), z.undefined()])
+    .transform((v) => (v ? v : null)),
+});
+export type EmployeeInput = z.infer<typeof employeeSchema>;
 
 /** Protocolo completo: HZ-XXXX-XXXX-XXXX-XXXX (alfabeto Crockford). */
 export const protocolSchema = z

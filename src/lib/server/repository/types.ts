@@ -2,6 +2,12 @@ import type {
   ActionPlan,
   ActionStatus,
   CourseEnrollment,
+  EmployeeNotification,
+  EmployeeProfile,
+  ReviewDetail,
+  ReviewFilters,
+  ReviewRevision,
+  ReviewSummary,
   EnrollmentFilters,
   EnrollmentStatus,
   FeedbackRecord,
@@ -15,7 +21,15 @@ import type {
   TrackResult,
 } from "@/lib/domain";
 export type RecordByKind = { ouvidoria: OuvidoriaRecord; feedback: FeedbackRecord };
-import type { ActionInput, EnrollmentInput, FeedbackInput, OuvidoriaInput, PulseInput } from "@/lib/validation";
+import type {
+  ActionInput,
+  EmployeeInput,
+  EnrollmentInput,
+  FeedbackInput,
+  OuvidoriaInput,
+  PulseInput,
+  ReviewInput,
+} from "@/lib/validation";
 
 export interface ProtocolData {
   reference: string;
@@ -53,6 +67,26 @@ export interface Repository {
   listEnrollments(filters?: EnrollmentFilters): Promise<CourseEnrollment[]>;
   updateEnrollmentStatus(id: string, status: EnrollmentStatus): Promise<void>;
   deleteEnrollment(id: string): Promise<void>;
+
+  // Avaliações profissionais — gestão
+  listEmployees(): Promise<EmployeeProfile[]>;
+  registerEmployee(input: EmployeeInput): Promise<void>;
+  listReviews(filters?: ReviewFilters): Promise<ReviewSummary[]>;
+  getReview(id: string): Promise<ReviewDetail | null>;
+  /** Cria (id null) ou atualiza. Se a avaliação já estiver publicada, registra revisão. */
+  saveReview(input: ReviewInput, id: string | null): Promise<string>;
+  /** Publica e cria a notificação interna do colaborador. */
+  publishReview(id: string): Promise<void>;
+  listRevisions(reviewId: string): Promise<ReviewRevision[]>;
+
+  // Avaliações profissionais — colaborador (sempre filtrado pelo próprio id; só publicadas)
+  getEmployee(employeeId: string): Promise<EmployeeProfile | null>;
+  listMyReviews(employeeId: string): Promise<ReviewSummary[]>;
+  getMyReview(employeeId: string, reviewId: string): Promise<ReviewDetail | null>;
+  markReviewViewed(employeeId: string, reviewId: string): Promise<void>;
+  acknowledgeReview(employeeId: string, reviewId: string): Promise<void>;
+  listNotifications(employeeId: string): Promise<EmployeeNotification[]>;
+  markNotificationRead(employeeId: string, notificationId: string): Promise<void>;
 }
 
 export class RepositoryError extends Error {

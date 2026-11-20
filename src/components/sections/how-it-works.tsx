@@ -8,7 +8,7 @@ const STEPS = [
   {
     icon: MessageSquareText,
     title: "Compartilhe sua experiência",
-    text: "Pelo celular, computador ou tablet: ouvidoria, reconhecimento, feedback ou pesquisa de percepção — sem cadastro e sem login.",
+    text: "Pelo celular, computador ou tablet: ouvidoria ou pesquisa de percepção, sem cadastro e sem login. A gestão também publica avaliações individuais no Meu Feedback.",
     tags: ["Sem login", "Sem dados pessoais"],
   },
   {

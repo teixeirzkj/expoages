@@ -28,7 +28,7 @@ export default function HomePage() {
         <Hero />
         <Program />
         <HowItWorks />
-        <Participate />
+        <Participate demoForced={!isSupabaseConfigured()} />
         <About />
       </main>
       <SiteFooter />

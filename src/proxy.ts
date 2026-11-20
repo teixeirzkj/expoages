@@ -2,14 +2,19 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 /**
- * Renova a sessão do Supabase nas rotas administrativas e faz um
+ * Renova a sessão do Supabase nas rotas da gestão e do colaborador e faz um
  * redirecionamento otimista para o login. A autorização definitiva acontece
  * no servidor (requireAdmin) e no banco (RLS) — o proxy não é a barreira.
  */
 export async function proxy(request: NextRequest) {
   const url = process.env.SUPABASE_URL;
   const key = process.env.SUPABASE_PUBLISHABLE_KEY ?? process.env.SUPABASE_ANON_KEY;
-  const isLogin = request.nextUrl.pathname.startsWith("/admin/login");
+  const path = request.nextUrl.pathname;
+  const isEmployeeArea = path.startsWith("/colaborador");
+  const loginPath = isEmployeeArea ? "/colaborador/entrar" : "/admin/login";
+  const isLogin = path.startsWith(loginPath);
+  // A demonstração do colaborador usa apenas dados fictícios e não exige conta.
+  if (path.startsWith("/colaborador/demo")) return NextResponse.next();
   if (!url || !key) return NextResponse.next();
 
   let response = NextResponse.next({ request });
@@ -29,7 +34,7 @@ export async function proxy(request: NextRequest) {
   const { data } = await supabase.auth.getUser();
   if (!data.user && !isLogin) {
     const login = request.nextUrl.clone();
-    login.pathname = "/admin/login";
+    login.pathname = loginPath;
     login.search = "";
     return NextResponse.redirect(login);
   }
@@ -37,5 +42,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/colaborador/:path*"],
 };

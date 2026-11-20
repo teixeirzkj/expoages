@@ -57,6 +57,17 @@ const FAQ = [
     ),
   },
   {
+    title: "Como funciona o Meu Feedback?",
+    content: (
+      <p>
+        Todo mês, a gestão pode preparar uma avaliação para cada colaborador, com pontos positivos, pontos de melhoria,
+        recomendações e metas para o próximo período. Depois de publicada, só o próprio colaborador a vê, entrando com a
+        conta criada pela gestão. Marcar como lido registra apenas a ciência, não concordância. É uma área identificada e
+        totalmente separada da ouvidoria anônima.
+      </p>
+    ),
+  },
+  {
     title: "Por que a inscrição nos cursos pede nome e e-mail?",
     content: (
       <p>
