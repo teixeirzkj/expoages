@@ -36,7 +36,7 @@ export const siteConfig = {
     course: "Gestão de Comportamento de Pessoas",
     institution: "Centro Universitário AGES",
     institutionLogoSrc: "",
-    advisor: "Ionne Oliveira Souza", // professor(a) orientador(a)
+    advisor: "Vanessa Fernandes e Rafael Ribeiro", // professores orientadores
     members: [
       "Alani da Silva",
       "Ana Clara",
@@ -44,6 +44,7 @@ export const siteConfig = {
       "Eduarda Capim",
       "Ênila Gabriele",
       "Gabriel Santos",
+      "Ionne Oliveira",
       "Kauan Lucas",
       "Sofia Vitória",
     ] as string[],
