@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, LoaderCircle, RotateCcw } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { submitPulse } from "@/app/actions/public";
 import { PULSE_QUESTIONS, PULSE_SCALE, type PulseKey } from "@/lib/domain";
@@ -10,6 +10,7 @@ import { ActionButton } from "@/components/brand/action-button";
 import { cn } from "@/lib/utils";
 import { Honeypot } from "./fields";
 import { useAntiAbuse } from "./use-anti-abuse";
+import { useSingleSubmit } from "./use-single-submit";
 
 type Answers = Partial<Record<PulseKey, number>>;
 
@@ -17,7 +18,7 @@ export function PulseForm() {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>({});
   const [done, setDone] = useState<null | "live" | "demo">(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, startTransition] = useSingleSubmit();
   const anti = useAntiAbuse();
   const total = PULSE_QUESTIONS.length;
   const q = PULSE_QUESTIONS[Math.min(index, total - 1)];
@@ -57,7 +58,7 @@ export function PulseForm() {
             aria-live="polite"
           >
             <p className="display-md text-navy">Obrigado por participar.</p>
-            <p className="mx-auto mt-4 max-w-md text-ink/65">
+            <p className="mx-auto mt-4 max-w-md text-slate">
               Suas respostas são anônimas e aparecem apenas em indicadores agregados, exibidos somente quando há um
               número mínimo de participações.
             </p>
@@ -84,7 +85,7 @@ export function PulseForm() {
                   />
                 ))}
               </div>
-              <span className="text-sm tabular-nums text-ink/50">
+              <span className="text-sm tabular-nums text-slate">
                 {Math.min(index + 1, total)} de {total}
               </span>
             </div>
@@ -119,7 +120,7 @@ export function PulseForm() {
                         )}
                       >
                         <span className="font-display text-xl font-semibold tabular-nums sm:text-2xl">{s.value}</span>
-                        <span className={cn("text-[0.7rem] leading-tight sm:text-xs", checked ? "text-cream/80" : "text-ink/55")}>{s.label}</span>
+                        <span className={cn("text-[0.7rem] leading-tight sm:text-xs", checked ? "text-cream/80" : "text-slate")}>{s.label}</span>
                       </button>
                     );
                   })}

@@ -29,7 +29,10 @@ import { cn } from "@/lib/utils";
 const TABS: {
   id: ParticipeTab;
   label: string;
+  /** Versão curta para telas estreitas (evita quebra de palavra). */
+  mobileLabel?: string;
   hint: string;
+  mobileHint?: string;
   icon: LucideIcon;
   title: string;
   text: string;
@@ -51,7 +54,9 @@ const TABS: {
   {
     id: "feedback",
     label: "Reconhecimento e feedback",
+    mobileLabel: "Reconhecimento",
     hint: "Anônimo",
+    mobileHint: "e feedback · anônimo",
     icon: HandHeart,
     title: "Reconhecer também é cuidar.",
     text: "Valorize uma equipe ou prática, ou sugira uma melhoria de forma construtiva.",
@@ -84,7 +89,7 @@ const TABS: {
     hint: "Inscrição",
     icon: GraduationCap,
     title: "Cursos profissionalizantes",
-    text: "Inscreva-se em um dos cursos oferecidos. As próximas informações chegam pelo seu e-mail.",
+    text: "Escolha um curso e faça sua inscrição.",
     points: [
       { icon: Mail, title: "Contato por e-mail", text: "Datas, horários e local são enviados pela coordenação." },
       { icon: UserCheck, title: "Inscrição identificada", text: "Pedimos apenas nome e e-mail, com sua autorização." },
@@ -129,11 +134,11 @@ export function Participate() {
             onClick={() => openTracker()}
             className="inline-flex h-11 shrink-0 items-center gap-2 self-start rounded-full bg-white px-5 text-sm font-semibold text-navy ring-1 ring-navy/12 transition-colors hover:ring-navy/40 md:self-auto"
           >
-            <Search className="size-4" /> Já enviou? Acompanhe pelo protocolo
+            <Search className="size-4" /> <span className="sm:hidden">Acompanhe pelo protocolo</span><span className="hidden sm:inline">Já enviou? Acompanhe pelo protocolo</span>
           </button>
         </Reveal>
 
-        <div role="tablist" aria-label="Formas de participar" className="mt-8 grid grid-cols-2 gap-2 md:mt-10 md:grid-cols-4">
+        <div role="tablist" aria-label="Formas de participar" className="mt-8 grid auto-rows-fr grid-cols-2 gap-2 md:mt-10 md:grid-cols-4 md:gap-3">
           {TABS.map((t, i) => {
             const active = tab === t.id;
             const Icon = t.icon;
@@ -152,14 +157,32 @@ export function Participate() {
                 onClick={() => selectTab(t.id)}
                 onKeyDown={(e) => onKey(e, i)}
                 className={cn(
-                  "flex min-h-16 items-center gap-3 rounded-xl px-3.5 py-3 text-left transition-[background-color,color,box-shadow] duration-200 sm:px-4",
-                  active ? "bg-navy text-white shadow-[0_8px_24px_-12px_rgba(19,25,54,0.6)]" : "bg-white text-navy ring-1 ring-navy/10 hover:ring-navy/30",
+                  "flex h-full min-h-[4.25rem] items-center gap-2.5 rounded-xl px-3 py-3 text-left sm:gap-3 transition-[background-color,color,box-shadow] duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue sm:px-4",
+                  active ? "bg-navy text-white shadow-[0_8px_24px_-14px_rgba(19,25,54,0.7)]" : "bg-white text-navy ring-1 ring-navy/10 hover:bg-cream hover:ring-navy/30",
                 )}
               >
-                <Icon className={cn("size-5 shrink-0", active ? "text-sky" : "text-blue")} strokeWidth={1.8} aria-hidden />
+                <Icon className={cn("size-[1.125rem] shrink-0 sm:size-5", active ? "text-sky" : "text-blue")} strokeWidth={1.8} aria-hidden />
                 <span className="min-w-0 leading-tight">
-                  <span className="block text-sm font-semibold sm:text-[0.9375rem]">{t.label}</span>
-                  <span className={cn("mt-0.5 block text-xs", active ? "text-cream/70" : "text-slate")}>{t.hint}</span>
+                  <span className="block text-[0.8125rem] font-semibold leading-snug min-[380px]:text-sm sm:text-[0.9375rem]">
+                    {t.mobileLabel ? (
+                      <>
+                        <span className="sm:hidden">{t.mobileLabel}</span>
+                        <span className="hidden sm:inline">{t.label}</span>
+                      </>
+                    ) : (
+                      t.label
+                    )}
+                  </span>
+                  <span className={cn("mt-0.5 block text-[0.8125rem]", active ? "text-cream/80" : "text-slate")}>
+                    {t.mobileHint ? (
+                      <>
+                        <span className="sm:hidden">{t.mobileHint}</span>
+                        <span className="hidden sm:inline">{t.hint}</span>
+                      </>
+                    ) : (
+                      t.hint
+                    )}
+                  </span>
                 </span>
               </button>
             );
@@ -173,27 +196,32 @@ export function Participate() {
             role="tabpanel"
             aria-labelledby={`tab-${t.id}`}
             hidden={tab !== t.id}
-            className="mt-3 animate-panel-in rounded-[var(--radius-card)] bg-white p-5 ring-1 ring-navy/8 sm:p-6 lg:p-8"
+            className="mt-3 animate-panel-in rounded-[var(--radius-card)] bg-white px-5 py-6 ring-1 ring-navy/8 sm:px-8 sm:py-8"
           >
-            <div className="grid gap-8 lg:grid-cols-12 lg:gap-10">
-              <aside className="lg:col-span-4">
-                <h3 className="display-md text-navy">{t.title}</h3>
-                <p className="mt-2 text-[0.9375rem] text-slate">{t.text}</p>
-                <ul className="mt-6 hidden space-y-4 border-t border-navy/8 pt-6 sm:block">
-                  {t.points.map(({ icon: Icon, title, text }) => (
-                    <li key={title} className="flex gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-mist text-navy">
-                        <Icon className="size-4" strokeWidth={1.8} aria-hidden />
-                      </span>
-                      <span className="text-sm">
-                        <span className="block font-semibold text-ink">{title}</span>
-                        <span className="text-slate">{text}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </aside>
-              <div className="min-w-0 lg:col-span-8">
+            <div className="mx-auto w-full max-w-[52rem]">
+              {/* Cabeçalho do formulário */}
+              <header className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="display-md text-navy">{t.title}</h3>
+                  <p className="mt-1 text-[0.9375rem] text-slate">{t.text}</p>
+                </div>
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-mist text-navy" aria-hidden>
+                  <t.icon className="size-5" strokeWidth={1.7} />
+                </span>
+              </header>
+              {/* Informações auxiliares em blocos compactos */}
+              <ul className="mt-5 flex flex-wrap gap-2 sm:grid sm:grid-cols-3">
+                {t.points.map(({ icon: Icon, title, text }) => (
+                  <li key={title} className="flex items-start gap-2 rounded-xl bg-cream px-3 py-2 sm:gap-2.5 sm:py-2.5">
+                    <Icon className="mt-0.5 size-4 shrink-0 text-blue" strokeWidth={1.8} aria-hidden />
+                    <span className="text-[0.8125rem] leading-snug">
+                      <span className="block font-semibold text-ink">{title}</span>
+                      <span className="hidden text-slate sm:inline">{text}</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-7 min-w-0">
                 {t.id === "ouvidoria" && (
                   <OuvidoriaForm
                     key={instances.ouvidoria}

@@ -1,13 +1,13 @@
 "use client";
 
-import { CircleCheck, LoaderCircle, Mail, RotateCcw, Send } from "lucide-react";
-import { useState, useTransition } from "react";
+import { CircleCheck, GraduationCap, LoaderCircle, Mail, RotateCcw, Send } from "lucide-react";
+import { useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { submitEnrollment } from "@/app/actions/public";
 import { AREAS, COURSE_SHIFTS, COURSES, type CourseKey, type CourseShift, type DataMode } from "@/lib/domain";
 import { enrollmentSchema, fieldErrors } from "@/lib/validation";
 import { ActionButton } from "@/components/brand/action-button";
-import { ChoiceGroup, FieldShell, Honeypot, TextInput } from "./fields";
+import { ChoiceGroup, FieldShell, Honeypot, SegmentedChoice, SelectInput, TextInput } from "./fields";
 import { useAntiAbuse } from "./use-anti-abuse";
 
 /**
@@ -25,9 +25,11 @@ export function EnrollmentForm() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [done, setDone] = useState<{ mode: DataMode; course: CourseKey; email: string } | null>(null);
   const [pending, startTransition] = useTransition();
+  const sending = useRef(false); // trava contra cliques repetidos antes do re-render
   const anti = useAntiAbuse();
 
   const submit = () => {
+    if (sending.current) return;
     const data = { fullName, email, course, shift, area, consent };
     const parsed = enrollmentSchema.safeParse(data);
     if (!parsed.success) {
@@ -35,12 +37,17 @@ export function EnrollmentForm() {
       return;
     }
     setErrors({});
+    sending.current = true;
     startTransition(async () => {
-      const res = await submitEnrollment({ ...data, ...anti.meta() });
-      if (res.ok) setDone({ mode: res.mode, course: parsed.data.course, email: parsed.data.email });
-      else {
-        if (res.fields) setErrors(res.fields);
-        toast.error(res.error);
+      try {
+        const res = await submitEnrollment({ ...data, ...anti.meta() });
+        if (res.ok) setDone({ mode: res.mode, course: parsed.data.course, email: parsed.data.email });
+        else {
+          if (res.fields) setErrors(res.fields);
+          toast.error(res.error);
+        }
+      } finally {
+        sending.current = false;
       }
     });
   };
@@ -58,29 +65,34 @@ export function EnrollmentForm() {
 
   if (done) {
     return (
-      <div className="py-4 text-center" aria-live="polite">
+      <div className="rounded-xl bg-cream px-5 py-8 text-center sm:px-8" aria-live="polite">
         <span className="mx-auto flex size-14 items-center justify-center rounded-full bg-navy text-white">
           <CircleCheck className="size-7" strokeWidth={1.8} />
         </span>
-        <h3 className="display-md mt-5 text-navy">Inscrição recebida.</h3>
-        <p className="mx-auto mt-2 max-w-md text-slate">
-          Você se inscreveu em <strong className="font-semibold text-ink">{COURSES[done.course].label}</strong>. As próximas
-          informações — datas, horários e local — serão enviadas pela coordenação para:
+        <h4 className="display-md mt-5 text-navy">Inscrição recebida!</h4>
+        <p className="mx-auto mt-2 max-w-md text-[0.9375rem] text-slate">
+          Seu interesse foi registrado. As próximas informações serão enviadas para o e-mail informado.
         </p>
-        <p className="mx-auto mt-4 inline-flex max-w-full items-center gap-2 rounded-full bg-mist px-4 py-2 text-sm font-medium text-navy">
-          <Mail className="size-4 shrink-0" aria-hidden />
-          <span className="truncate">{done.email}</span>
-        </p>
+        <dl className="mx-auto mt-5 grid max-w-md gap-2 text-left text-sm">
+          <div className="flex items-center gap-2.5 rounded-xl bg-white px-4 py-3">
+            <GraduationCap className="size-4 shrink-0 text-blue" aria-hidden />
+            <dt className="sr-only">Curso</dt>
+            <dd className="font-medium text-ink">{COURSES[done.course].label}</dd>
+          </div>
+          <div className="flex items-center gap-2.5 rounded-xl bg-white px-4 py-3">
+            <Mail className="size-4 shrink-0 text-blue" aria-hidden />
+            <dt className="sr-only">E-mail</dt>
+            <dd className="truncate font-medium text-ink">{done.email}</dd>
+          </div>
+        </dl>
         {done.mode === "demo" && (
-          <p className="mx-auto mt-4 max-w-md rounded-xl bg-cream px-4 py-2.5 text-xs text-navy">
-            Modo demonstração: a inscrição foi registrada apenas no ambiente fictício da apresentação.
+          <p className="mx-auto mt-4 max-w-md text-[0.8125rem] text-slate">
+            Modo demonstração: registrada apenas no ambiente fictício da apresentação.
           </p>
         )}
-        <div className="mt-6">
-          <ActionButton variant="outline" className="text-navy" onClick={restart}>
-            <RotateCcw className="size-4" /> Nova inscrição
-          </ActionButton>
-        </div>
+        <ActionButton variant="outline" className="mt-6 text-navy" onClick={restart}>
+          <RotateCcw className="size-4" /> Nova inscrição
+        </ActionButton>
       </div>
     );
   }
@@ -92,7 +104,8 @@ export function EnrollmentForm() {
         e.preventDefault();
         submit();
       }}
-      className="relative space-y-7"
+      className="relative grid gap-7"
+      aria-busy={pending}
     >
       <Honeypot value={anti.website} onChange={anti.setWebsite} />
 
@@ -110,7 +123,8 @@ export function EnrollmentForm() {
         />
       </FieldShell>
 
-      <div className="grid gap-6 sm:grid-cols-2">
+      {/* Linha 1: nome e e-mail começam na mesma altura (ajuda fica abaixo do campo) */}
+      <div className="grid items-start gap-x-4 gap-y-6 sm:grid-cols-2">
         <FieldShell label="Nome completo" htmlFor="cur-name" error={errors.fullName}>
           <TextInput
             id="cur-name"
@@ -118,10 +132,11 @@ export function EnrollmentForm() {
             maxLength={80}
             onChange={(e) => setFullName(e.target.value)}
             autoComplete="name"
+            placeholder="Seu nome"
             aria-invalid={!!errors.fullName}
           />
         </FieldShell>
-        <FieldShell label="E-mail" htmlFor="cur-email" error={errors.email} hint="As informações do curso chegam por aqui.">
+        <FieldShell label="E-mail" htmlFor="cur-email" error={errors.email} hint="As informações do curso chegam por aqui." hintBelow>
           <TextInput
             id="cur-email"
             type="email"
@@ -138,65 +153,68 @@ export function EnrollmentForm() {
         </FieldShell>
       </div>
 
+      {/* Linha 2: turno */}
       <FieldShell as="fieldset" label="Turno de preferência" error={errors.shift}>
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {(Object.keys(COURSE_SHIFTS) as CourseShift[]).map((k) => (
-            <button
-              key={k}
-              type="button"
-              aria-pressed={shift === k}
-              onClick={() => setShift(k)}
-              className={
-                shift === k
-                  ? "min-h-11 rounded-xl border border-navy bg-navy px-3 text-sm font-medium text-white"
-                  : "min-h-11 rounded-xl border border-navy/15 bg-white px-3 text-sm text-ink/80 hover:border-navy/40"
-              }
-            >
-              {COURSE_SHIFTS[k]}
-            </button>
-          ))}
-        </div>
+        <SegmentedChoice
+          name="shift"
+          value={shift}
+          onChange={setShift}
+          options={(Object.keys(COURSE_SHIFTS) as CourseShift[]).map((k) => ({ value: k, label: COURSE_SHIFTS[k] }))}
+        />
       </FieldShell>
 
+      {/* Linha 3: área (opcional) */}
       <FieldShell label="Área em que trabalha" htmlFor="cur-area" optional>
-        <select
-          id="cur-area"
-          value={area}
-          onChange={(e) => setArea(e.target.value)}
-          className="h-12 w-full rounded-xl border border-navy/15 bg-white px-4 text-base text-ink focus:border-navy focus:outline-none focus:ring-4 focus:ring-blue/15"
-        >
+        <SelectInput id="cur-area" value={area} onChange={(e) => setArea(e.target.value)}>
           <option value="">Prefiro não informar</option>
           {AREAS.map((a) => (
             <option key={a} value={a}>
               {a}
             </option>
           ))}
-        </select>
+        </SelectInput>
       </FieldShell>
 
-      <div>
-        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-navy/15 p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-blue">
+      {/* Resumo + autorização + envio */}
+      <div className="grid gap-3">
+        {course && (
+          <p className="flex items-start gap-2.5 rounded-xl bg-selected px-4 py-3 text-[0.9375rem] text-navy" aria-live="polite">
+            <GraduationCap className="mt-0.5 size-4 shrink-0" aria-hidden />
+            <span>
+              Você está se inscrevendo em <strong className="font-semibold">{COURSES[course].label}</strong>
+              {shift ? (
+                <>
+                  {" "}
+                  · turno: <strong className="font-semibold">{COURSE_SHIFTS[shift].toLowerCase()}</strong>
+                </>
+              ) : null}
+              .
+            </span>
+          </p>
+        )}
+        <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-navy/15 px-4 py-3.5 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue">
           <input
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
+            aria-invalid={!!errors.consent}
             className="mt-0.5 size-5 shrink-0 accent-[var(--brand-navy)]"
           />
-          <span className="text-[0.9375rem] text-ink">
+          <span className="text-[0.9375rem] leading-snug text-ink">
             Autorizo o uso do meu nome e e-mail <strong className="font-semibold">apenas</strong> para o contato sobre a
             inscrição. Esses dados não se misturam às mensagens anônimas da ouvidoria.
           </span>
         </label>
         {errors.consent && (
-          <p role="alert" className="mt-2 text-sm font-medium text-destructive">
+          <p role="alert" className="text-sm font-medium text-destructive">
             {errors.consent}
           </p>
         )}
       </div>
 
-      <div className="flex items-center justify-between gap-3 border-t border-navy/10 pt-5">
-        <span className="text-xs text-slate">Inscrição identificada</span>
-        <ActionButton type="submit" disabled={pending} aria-busy={pending}>
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-[0.8125rem] text-slate">Registra seu interesse; a coordenação confirma as vagas por e-mail.</p>
+        <ActionButton type="submit" size="lg" disabled={pending} aria-busy={pending} className="w-full sm:w-auto">
           {pending ? <LoaderCircle className="size-4 animate-spin" /> : <Send className="size-4" />}
           {pending ? "Enviando…" : "Confirmar inscrição"}
         </ActionButton>

@@ -64,14 +64,14 @@ export function SubmissionSuccess({
       </motion.div>
 
       <h3 className="display-md mt-6 text-navy">{title}</h3>
-      <p className="mx-auto mt-3 max-w-md text-ink/65">{message}</p>
+      <p className="mx-auto mt-3 max-w-md text-slate">{message}</p>
 
       <div className="mx-auto mt-8 max-w-md rounded-2xl border border-dashed border-navy/30 bg-cream p-6">
-        <p className="eyebrow text-ink/50">Seu protocolo</p>
+        <p className="eyebrow text-slate">Seu protocolo</p>
         <p className="mt-3 break-all font-mono text-[clamp(1.05rem,4vw,1.4rem)] font-semibold tracking-wider text-navy" translate="no">
           {protocol}
         </p>
-        <p className="mt-3 text-xs text-ink/55">
+        <p className="mt-3 text-xs text-slate">
           Guarde este código: ele é a única forma de acompanhar o retorno. Não é possível recuperá-lo depois.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
@@ -90,7 +90,7 @@ export function SubmissionSuccess({
         </p>
       )}
 
-      <button type="button" onClick={onClose} className="mt-6 text-sm font-medium text-ink/60 underline-offset-4 hover:underline">
+      <button type="button" onClick={onClose} className="mt-6 text-sm font-medium text-slate underline-offset-4 hover:underline">
         {closeLabel}
       </button>
     </div>

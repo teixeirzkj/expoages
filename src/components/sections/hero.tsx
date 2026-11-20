@@ -5,6 +5,7 @@ import { siteConfig } from "@/config/site";
 import { ActionButton } from "@/components/brand/action-button";
 import { useParticipation } from "@/components/forms/participation";
 import { useScrollTo } from "@/components/motion/scroll-to";
+import { HeroSun } from "./hero-sun";
 
 const ORBIT = 132;
 const PEOPLE = [
@@ -100,10 +101,11 @@ export function Hero() {
     <section
       id="inicio"
       aria-labelledby="hero-title"
-      className="surface-dark relative overflow-hidden bg-navy pb-14 pt-[calc(var(--header-h)+2.5rem)] text-cream md:pb-20 md:pt-[calc(var(--header-h)+4rem)]"
+      className="surface-dark relative isolate overflow-hidden bg-navy pb-[calc(min(46vw,20rem)*0.62)] pt-[calc(var(--header-h)+2.5rem)] text-cream md:pt-[calc(var(--header-h)+3.5rem)]"
     >
-      <div className="container-editorial grid items-center gap-10 md:grid-cols-12">
-        <div className="md:col-span-7">
+      <HeroSun />
+      <div className="container-editorial relative z-10 grid items-center gap-10 pb-6 md:grid-cols-12">
+        <div data-hero-fade className="md:col-span-7">
           <p className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[0.8125rem] text-cream/80 animate-fade-up">
             <span className="size-1.5 rounded-full bg-sky" />
             Proposta acadêmica<span className="hidden sm:inline"> · {siteConfig.academic.course}</span>
@@ -133,7 +135,7 @@ export function Hero() {
             {siteConfig.company.location}.
           </p>
         </div>
-        <div className="hidden md:col-span-5 md:block">
+        <div data-hero-fade className="hidden md:col-span-5 md:block">
           <ListeningVisual />
         </div>
       </div>

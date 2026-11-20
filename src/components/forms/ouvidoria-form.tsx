@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, LoaderCircle, ShieldCheck } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { submitOuvidoria } from "@/app/actions/public";
 import { LIMITS, OUVIDORIA_CATEGORIES, TOPIC_SUGGESTIONS, type OuvidoriaCategory } from "@/lib/domain";
@@ -12,6 +12,7 @@ import { ChoiceGroup, FieldShell, Honeypot, PrivacyHint, ScaleInput, SuggestionC
 import { FormStepper } from "./form-stepper";
 import { SubmissionSuccess } from "./submission-success";
 import { useAntiAbuse } from "./use-anti-abuse";
+import { useSingleSubmit } from "./use-single-submit";
 
 const STEPS = ["Tipo e tema", "Relato", "Revisão"];
 const CATEGORY_HINTS: Record<OuvidoriaCategory, string> = {
@@ -39,7 +40,7 @@ export function OuvidoriaForm({
   const [confirm, setConfirm] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<{ protocol: string; mode: "live" | "demo" } | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, startTransition] = useSingleSubmit();
   const anti = useAntiAbuse();
 
   const validateStep = (s: number) => {
@@ -174,12 +175,12 @@ export function OuvidoriaForm({
                     ["Impacto", impact ? `${impact} de 5` : "Não informado"],
                   ].map(([k, v]) => (
                     <div key={k} className="flex justify-between gap-6 px-5 py-3.5 text-sm">
-                      <dt className="text-ink/55">{k}</dt>
+                      <dt className="text-slate">{k}</dt>
                       <dd className="text-right font-medium text-ink">{v}</dd>
                     </div>
                   ))}
                   <div className="px-5 py-4">
-                    <dt className="text-sm text-ink/55">Descrição</dt>
+                    <dt className="text-sm text-slate">Descrição</dt>
                     <dd className="mt-2 max-h-40 overflow-y-auto whitespace-pre-line text-[0.95rem] text-ink">
                       {description}
                     </dd>
@@ -210,13 +211,13 @@ export function OuvidoriaForm({
         </AnimatePresence>
       </div>
 
-      <div className="mt-8 flex items-center justify-between gap-3 border-t border-navy/10 pt-5">
+      <div className="mt-8 flex items-center justify-between gap-3">
         {step > 0 ? (
           <ActionButton variant="ghost" className="text-navy" onClick={back} disabled={pending}>
             <ArrowLeft className="size-4" /> Voltar
           </ActionButton>
         ) : (
-          <span className="text-xs text-ink/45">Leva cerca de 2 minutos</span>
+          <span className="text-[0.8125rem] text-slate">Leva cerca de 2 minutos</span>
         )}
         {step < 2 ? (
           <ActionButton type="submit" icon={<ArrowRight className="size-4" />}>

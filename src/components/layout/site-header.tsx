@@ -4,6 +4,7 @@ import { Menu, MessageSquareText, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { navItems, siteConfig } from "@/config/site";
 import { Logo } from "@/components/brand/logo";
+import { DemoModeBadge } from "./demo-banner";
 import { useParticipation } from "@/components/forms/participation";
 import { scrollToTarget } from "@/components/motion/scroll-to";
 import { cn } from "@/lib/utils";
@@ -45,7 +46,7 @@ function useOverHero() {
 
 const IDS = navItems.map((n) => n.id);
 
-export function SiteHeader() {
+export function SiteHeader({ demoForced = false }: { demoForced?: boolean }) {
   const [open, setOpen] = useState(false);
   const active = useActiveSection(IDS);
   const overHero = useOverHero();
@@ -87,9 +88,12 @@ export function SiteHeader() {
       )}
     >
       <div className="container-editorial flex h-full items-center justify-between gap-4">
-        <button type="button" onClick={() => go("inicio")} aria-label={`${siteConfig.platformName} — voltar ao início`} className="rounded-md">
-          <Logo tone={dark ? "light" : "dark"} />
-        </button>
+        <div className="flex items-center gap-2.5">
+          <button type="button" onClick={() => go("inicio")} aria-label={`${siteConfig.platformName} — voltar ao início`} className="rounded-md">
+            <Logo tone={dark ? "light" : "dark"} />
+          </button>
+          <DemoModeBadge forced={demoForced} tone={dark ? "dark" : "light"} />
+        </div>
 
         <nav aria-label="Navegação principal" className="hidden lg:block">
           <ul className="flex items-center gap-1">

@@ -22,6 +22,7 @@
   --brand-mist: #e9eaf0;     /* cinza claro azulado */
   --brand-slate: #626779;    /* texto secundário (AA sobre creme e branco) */
   --brand-sky: #c3cdeb;      /* azul claro: destaque sobre fundos escuros */
+  --brand-selected: #eef1fa; /* azul-claro muito suave: opção selecionada */
   --brand-ink: #131936;      /* texto principal */
 
   /* Raios e ritmo */
@@ -93,6 +94,7 @@
   --color-mist: var(--brand-mist);
   --color-slate: var(--brand-slate);
   --color-sky: var(--brand-sky);
+  --color-selected: var(--brand-selected);
   --color-ink: var(--brand-ink);
 
   --color-sidebar-ring: var(--sidebar-ring);
@@ -134,7 +136,7 @@
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-panel-in: panel-in 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
+  --animate-panel-in: panel-in 0.2s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
 @keyframes fade-up {
@@ -142,7 +144,7 @@
   to { opacity: 1; transform: none; }
 }
 @keyframes panel-in {
-  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  from { opacity: 0; transform: translate3d(0, 6px, 0); }
   to { opacity: 1; transform: none; }
 }
 @keyframes draw {
@@ -281,7 +283,6 @@
 
 /* Modo apresentação: oculta elementos secundários */
 html[data-presentation="true"] [data-secondary] { display: none !important; }
-html[data-presentation="true"] .demo-banner { top: 4.75rem; bottom: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

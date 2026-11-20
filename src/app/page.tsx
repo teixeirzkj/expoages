@@ -2,7 +2,6 @@ import { isSupabaseConfigured } from "@/lib/server/env";
 import { ParticipationProvider } from "@/components/forms/participation";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
-import { DemoModeBanner } from "@/components/layout/demo-banner";
 import { PresenterDock } from "@/components/layout/presenter-dock";
 import { Hero } from "@/components/sections/hero";
 import { Program } from "@/components/sections/program";
@@ -24,7 +23,7 @@ export default function HomePage() {
       >
         Pular para o conteúdo
       </a>
-      <SiteHeader />
+      <SiteHeader demoForced={!isSupabaseConfigured()} />
       <main id="conteudo">
         <Hero />
         <Program />
@@ -33,7 +32,6 @@ export default function HomePage() {
         <About />
       </main>
       <SiteFooter />
-      <DemoModeBanner forced={!isSupabaseConfigured()} />
       <PresenterDock />
     </ParticipationProvider>
   );

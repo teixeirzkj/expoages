@@ -1,7 +1,7 @@
 "use client";
 
 import { LoaderCircle, Send } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { submitFeedback } from "@/app/actions/public";
 import { AREAS, FEEDBACK_KINDS, LIMITS, type FeedbackKind } from "@/lib/domain";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { ChoiceGroup, FieldShell, Honeypot, PrivacyHint, ScaleInput, SuggestionChips, TextArea, TextInput } from "./fields";
 import { SubmissionSuccess } from "./submission-success";
 import { useAntiAbuse } from "./use-anti-abuse";
+import { useSingleSubmit } from "./use-single-submit";
 
 const TOPICS: Record<FeedbackKind, string[]> = {
   reconhecimento: ["Colaboração", "Atendimento", "Liderança", "Integração", "Iniciativa", "Treinamento"],
@@ -57,7 +58,7 @@ export function FeedbackForm({
   const [rating, setRating] = useState<number | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [result, setResult] = useState<{ protocol: string; mode: "live" | "demo" } | null>(null);
-  const [pending, startTransition] = useTransition();
+  const [pending, startTransition] = useSingleSubmit();
   const anti = useAntiAbuse();
   const copy = COPY[feedbackKind];
 
@@ -173,8 +174,8 @@ export function FeedbackForm({
         <ScaleInput name={copy.rating} value={rating} onChange={setRating} labels={copy.labels} />
       </FieldShell>
 
-      <div className="flex items-center justify-between gap-3 border-t border-navy/10 pt-5">
-        <span className="text-xs text-ink/45">Sem identificação pessoal</span>
+      <div className="flex items-center justify-between gap-3 pt-1">
+        <span className="text-[0.8125rem] text-slate">Sem identificação pessoal</span>
         <ActionButton type="submit" disabled={pending} aria-busy={pending}>
           {pending ? <LoaderCircle className="size-4 animate-spin" /> : <Send className="size-4" />}
           {pending ? "Enviando…" : "Enviar"}

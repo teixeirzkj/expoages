@@ -100,14 +100,14 @@ export function ProtocolTracker({ initialProtocol = "" }: { initialProtocol?: st
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
               <p className="font-display text-2xl text-navy">{data.label}</p>
-              <p className="text-sm text-ink/55">Enviado em {formatDate(data.createdAt)}</p>
+              <p className="text-sm text-slate">Enviado em {formatDate(data.createdAt)}</p>
             </div>
 
             <ol className="grid grid-cols-4 gap-2" aria-label="Andamento">
               {ORDER.map((s, i) => (
                 <li key={s} className="space-y-2" aria-current={i === stepIndex ? "step" : undefined}>
                   <span className={cn("block h-1.5 rounded-full", i <= stepIndex ? "bg-navy" : "bg-navy/12")} />
-                  <span className={cn("block text-xs leading-tight", i <= stepIndex ? "font-semibold text-navy" : "text-ink/45")}>
+                  <span className={cn("block text-xs leading-tight", i <= stepIndex ? "font-semibold text-navy" : "text-slate")}>
                     {SUBMISSION_STATUSES[s]}
                   </span>
                 </li>
@@ -117,7 +117,7 @@ export function ProtocolTracker({ initialProtocol = "" }: { initialProtocol?: st
             <div>
               <p className="text-sm font-semibold text-ink">Devolutivas da gestão</p>
               {data.responses.length === 0 ? (
-                <p className="mt-3 rounded-xl border border-dashed border-navy/20 px-4 py-5 text-sm text-ink/55">
+                <p className="mt-3 rounded-xl border border-dashed border-navy/20 px-4 py-5 text-sm text-slate">
                   Ainda não há uma devolutiva registrada. Volte a consultar com o mesmo protocolo.
                 </p>
               ) : (

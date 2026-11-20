@@ -16,7 +16,7 @@ export function FormStepper({ steps, current }: { steps: string[]; current: numb
               )}
             />
           </span>
-          <span className={cn("text-xs font-medium", i <= current ? "text-navy" : "text-ink/40")}>
+          <span className={cn("text-xs font-medium", i <= current ? "text-navy" : "text-slate")}>
             <span className="tabular-nums">{i + 1}.</span> {s}
           </span>
         </li>
