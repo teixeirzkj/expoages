@@ -1,139 +1,140 @@
 "use client";
 
-import { ArrowDown, ArrowUpRight } from "lucide-react";
-import { useRef } from "react";
+import { ArrowDown, MessageSquareText } from "lucide-react";
 import { siteConfig } from "@/config/site";
 import { ActionButton } from "@/components/brand/action-button";
-import { Magnetic } from "@/components/motion/magnetic-button";
-import { useScrollTo } from "@/components/motion/smooth-scroll";
-import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
+import { useParticipation } from "@/components/forms/participation";
+import { useScrollTo } from "@/components/motion/scroll-to";
 
-const LINES: { text: React.ReactNode; indent?: string }[] = [
-  { text: "Quando as pessoas" },
-  { text: <>são <em className="italic text-terracotta-2">ouvidas</em>, o trabalho</>, indent: "md:pl-[8vw]" },
-  { text: "ganha outro significado." },
-];
+const ORBIT = 132;
+const PEOPLE = [
+  { angle: -72, accent: false },
+  { angle: 14, accent: true },
+  { angle: 96, accent: false },
+  { angle: 166, accent: false },
+  { angle: 222, accent: false },
+].map((p, i) => {
+  const r = (p.angle * Math.PI) / 180;
+  return { ...p, i, x: +(200 + ORBIT * Math.cos(r)).toFixed(1), y: +(200 + ORBIT * Math.sin(r)).toFixed(1) };
+});
 
 /**
- * Abertura editorial. O título é animado por CSS (aparece já na primeira
- * pintura, sem depender de JS). A rolagem expande o "sol" do horizonte,
- * que cobre a tela e conduz à seção escura seguinte.
+ * Ilustração própria: uma fala no centro, ondas de escuta e pessoas ao redor.
+ * Animação de entrada única em CSS (traço + opacidade); depois fica estática.
  */
-export function Hero() {
-  const root = useRef<HTMLElement>(null);
-  const scrollTo = useScrollTo();
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: root.current, start: "top top", end: "bottom top", scrub: 0.5 },
-        });
-        tl.to("[data-sun]", { scale: 9, ease: "power2.in", duration: 1 }, 0)
-          .to("[data-rings]", { scale: 1.6, autoAlpha: 0, ease: "power1.in", duration: 0.8 }, 0)
-          .to("[data-hero-copy]", { yPercent: -12, autoAlpha: 0, ease: "power1.out", duration: 0.42 }, 0)
-          .to("[data-hero-foot]", { autoAlpha: 0, duration: 0.2 }, 0);
-      });
-      return () => mm.revert();
-    },
-    { scope: root },
+function ListeningVisual() {
+  return (
+    <div className="relative mx-auto aspect-square w-full max-w-[26rem]" aria-hidden>
+      <svg viewBox="0 0 400 400" className="h-full w-full overflow-visible">
+        {[92, 132, 172].map((r, i) => (
+          <circle
+            key={r}
+            cx="200"
+            cy="200"
+            r={r}
+            fill="none"
+            stroke="var(--brand-sky)"
+            strokeOpacity={[0.4, 0.22, 0.12][i]}
+            strokeWidth="1.25"
+            pathLength={1}
+            strokeDasharray="1"
+            strokeDashoffset="1"
+            transform="rotate(-90 200 200)"
+            style={{ animation: `draw 1.4s var(--ease-out-quart) ${0.15 + i * 0.15}s forwards` }}
+          />
+        ))}
+        {PEOPLE.map((p) => (
+          <line
+            key={`l${p.i}`}
+            x1="200"
+            y1="200"
+            x2={p.x}
+            y2={p.y}
+            stroke="var(--brand-sky)"
+            strokeOpacity="0.25"
+            strokeDasharray="2 5"
+            className="animate-fade-up"
+            style={{ animationDelay: `${0.7 + p.i * 0.08}s` }}
+          />
+        ))}
+        {PEOPLE.map((p) => (
+          <g key={p.i} className="animate-fade-up" style={{ animationDelay: `${0.6 + p.i * 0.08}s` }}>
+            <g transform={`translate(${p.x} ${p.y})`}>
+              <circle r="23" fill={p.accent ? "var(--brand-sky)" : "var(--brand-navy-2)"} />
+              <circle cy="-6" r="6" fill={p.accent ? "var(--brand-navy)" : "var(--brand-cream)"} />
+              <path d="M-11 13 a11 10 0 0 1 22 0 z" fill={p.accent ? "var(--brand-navy)" : "var(--brand-cream)"} />
+            </g>
+          </g>
+        ))}
+        {/* Fala central */}
+        <g className="animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <circle cx="200" cy="200" r="54" fill="var(--brand-sky)" opacity="0.18" style={{ transformOrigin: "200px 200px", animation: "pulse-ring 2.4s ease-out 1.2s 2 both" }} />
+          <path d="M162 176 a16 16 0 0 1 16 -16 h44 a16 16 0 0 1 16 16 v32 a16 16 0 0 1 -16 16 h-26 l-14 14 v-14 h-4 a16 16 0 0 1 -16 -16 z" fill="var(--brand-cream)" />
+          <rect x="178" y="180" width="44" height="5" rx="2.5" fill="var(--brand-navy)" opacity="0.8" />
+          <rect x="178" y="193" width="30" height="5" rx="2.5" fill="var(--brand-navy)" opacity="0.45" />
+        </g>
+      </svg>
+      {[
+        { label: "Escuta", cls: "left-0 top-[16%]" },
+        { label: "Reconhecimento", cls: "right-0 top-[44%] translate-x-2" },
+        { label: "Evolução", cls: "bottom-[8%] left-[6%]" },
+      ].map((t, i) => (
+        <span
+          key={t.label}
+          className={`absolute ${t.cls} inline-flex items-center gap-2 rounded-full border border-white/12 bg-navy-2 px-3 py-1.5 text-xs font-medium text-cream animate-fade-up`}
+          style={{ animationDelay: `${0.9 + i * 0.1}s` }}
+        >
+          <span className="size-1.5 rounded-full bg-sky" />
+          {t.label}
+        </span>
+      ))}
+    </div>
   );
+}
+
+export function Hero() {
+  const scrollTo = useScrollTo();
+  const { selectTab } = useParticipation();
 
   return (
     <section
       id="inicio"
-      ref={root}
       aria-labelledby="hero-title"
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-ivory pt-[calc(var(--header-h)+2.5rem)] grain"
+      className="surface-dark relative overflow-hidden bg-navy pb-14 pt-[calc(var(--header-h)+2.5rem)] text-cream md:pb-20 md:pt-[calc(var(--header-h)+4rem)]"
     >
-      {/* Composição abstrata: sol, ondas de escuta e órbita */}
-      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 flex justify-center">
-        <div data-rings className="absolute bottom-0 left-1/2 aspect-square w-[min(120vw,74rem)] -translate-x-1/2 translate-y-1/2">
-          {[1, 0.78, 0.58].map((s, i) => (
-            <span
-              key={s}
-              className="absolute inset-0 m-auto rounded-full border border-petrol/15"
-              style={{ width: `${s * 100}%`, height: `${s * 100}%`, animation: `breathe ${9 + i * 2}s ease-in-out ${i * 0.8}s infinite` }}
-            />
-          ))}
-          <span className="absolute inset-0 m-auto size-[78%] animate-orbit">
-            <span className="absolute left-1/2 top-0 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-terracotta shadow-[0_0_0_6px_rgba(213,142,114,0.18)]" />
-          </span>
-        </div>
-        <div
-          data-sun
-          className="absolute bottom-0 left-1/2 aspect-square w-[min(46vw,22rem)] -translate-x-1/2 translate-y-1/2 rounded-full bg-petrol will-change-transform max-md:w-[58vw]"
-        />
-      </div>
-
-      <div data-hero-copy className="container-editorial relative flex flex-1 flex-col">
-        <div className="flex flex-wrap items-center justify-between gap-3 text-[0.8rem] text-ink/60 [animation-delay:.1s] animate-fade-up">
-          <p className="flex items-center gap-2">
-            <span className="inline-block size-1.5 rounded-full bg-terracotta" />
-            Proposta acadêmica · {siteConfig.academic.course}
+      <div className="container-editorial grid items-center gap-10 md:grid-cols-12">
+        <div className="md:col-span-7">
+          <p className="inline-flex items-center gap-2 rounded-full bg-white/[0.07] px-3 py-1.5 text-[0.8125rem] text-cream/80 animate-fade-up">
+            <span className="size-1.5 rounded-full bg-sky" />
+            Proposta acadêmica<span className="hidden sm:inline"> · {siteConfig.academic.course}</span>
           </p>
-          <p className="hidden sm:block">Cenário: {siteConfig.company.name.replace(" Ltda.", "")} (fictícia)</p>
-        </div>
-
-        <h1
-          id="hero-title"
-          className="display-xl mt-[clamp(2.5rem,7vh,5.5rem)] max-w-[15ch] text-petrol md:max-w-none"
-        >
-          {LINES.map((line, i) => (
-            <span key={i} className={`block overflow-hidden pb-[0.1em] -mb-[0.1em] ${line.indent ?? ""}`}>
-              <span className="block animate-hero-line" style={{ animationDelay: `${0.15 + i * 0.12}s` }}>
-                {line.text}
-              </span>
-            </span>
-          ))}
-        </h1>
-
-        <div className="mt-10 grid gap-8 md:grid-cols-12 md:items-end">
-          <p
-            className="lead max-w-[34rem] text-ink/75 animate-fade-up md:col-span-6 md:col-start-7 lg:col-span-5 lg:col-start-8"
-            style={{ animationDelay: "0.65s" }}
-          >
-            Uma proposta para transformar escuta, reconhecimento e feedback em caminhos para um ambiente profissional mais
-            saudável.
+          <h1 id="hero-title" className="display-xl mt-6 max-w-[16ch] text-white animate-fade-up" style={{ animationDelay: "0.08s" }}>
+            Valorizar pessoas começa por <span className="text-sky">ouvi-las.</span>
+          </h1>
+          <p className="lead mt-5 max-w-[34rem] text-cream/75 animate-fade-up" style={{ animationDelay: "0.16s" }}>
+            Um espaço para escuta, reconhecimento e melhoria do ambiente de trabalho.
           </p>
-        </div>
-
-        <div
-          className="mt-8 flex flex-wrap items-center gap-3 animate-fade-up md:ml-[calc(50%+0.5rem)] lg:ml-[calc(58.33%+0.5rem)]"
-          style={{ animationDelay: "0.8s" }}
-        >
-          <Magnetic>
-            <ActionButton size="lg" onClick={() => scrollTo("#programa")} icon={<ArrowDown className="size-4" />}>
+          <div className="mt-8 flex flex-col gap-3 animate-fade-up sm:flex-row sm:flex-wrap" style={{ animationDelay: "0.24s" }}>
+            <ActionButton size="lg" variant="accent" onClick={() => scrollTo("#programa")} icon={<ArrowDown className="size-4" />}>
               Conhecer o programa
             </ActionButton>
-          </Magnetic>
-          <ActionButton
-            size="lg"
-            variant="outline"
-            className="text-petrol"
-            onClick={() => scrollTo("#participar")}
-            icon={<ArrowUpRight className="size-4" />}
-          >
-            Enviar uma contribuição
-          </ActionButton>
+            <ActionButton
+              size="lg"
+              variant="outline"
+              className="text-cream"
+              onClick={() => selectTab("ouvidoria", { scroll: true })}
+              icon={<MessageSquareText className="size-4" />}
+            >
+              Acessar a ouvidoria
+            </ActionButton>
+          </div>
+          <p className="mt-10 text-sm text-cream/55 animate-fade-up" style={{ animationDelay: "0.32s" }}>
+            Cenário de estudo: {siteConfig.company.name.replace(" Ltda.", "")} — empresa fictícia de contact center na{" "}
+            {siteConfig.company.location}.
+          </p>
         </div>
-
-        <div data-hero-foot className="mt-auto flex items-end justify-between gap-6 pb-6 pt-16 text-xs text-ink/55">
-          <ol className="hidden gap-8 md:flex" aria-label="Pilares do programa">
-            {["Escuta", "Reconhecimento", "Evolução"].map((p, i) => (
-              <li key={p} className="flex items-center gap-2">
-                <span className="tabular-nums text-terracotta-2">0{i + 1}</span>
-                {p}
-              </li>
-            ))}
-          </ol>
-          <span className="flex items-center gap-2" data-secondary>
-            <span className="relative block h-8 w-px overflow-hidden bg-ink/15">
-              <span className="absolute inset-x-0 top-0 h-1/2 animate-[scrollcue_2.2s_ease-in-out_infinite] bg-petrol" />
-            </span>
-            Role para continuar
-          </span>
+        <div className="hidden md:col-span-5 md:block">
+          <ListeningVisual />
         </div>
       </div>
     </section>

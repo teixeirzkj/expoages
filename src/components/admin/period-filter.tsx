@@ -2,7 +2,7 @@ import Form from "next/form";
 import Link from "next/link";
 
 const control =
-  "h-11 rounded-xl border border-petrol/15 bg-card px-3 text-sm focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20";
+  "h-11 rounded-xl border border-navy/15 bg-card px-3 text-sm focus:border-navy focus:outline-none focus:ring-4 focus:ring-sky/20";
 
 /** Filtro de período (GET), funciona mesmo sem JavaScript. */
 export function PeriodFilter({ action, from, to }: { action: string; from?: string; to?: string }) {
@@ -16,9 +16,9 @@ export function PeriodFilter({ action, from, to }: { action: string; from?: stri
         Até
         <input type="date" name="ate" defaultValue={to} className={control} />
       </label>
-      <button type="submit" className="h-11 rounded-xl bg-petrol px-4 text-sm font-semibold text-ivory">Aplicar período</button>
+      <button type="submit" className="h-11 rounded-xl bg-navy px-4 text-sm font-semibold text-cream">Aplicar período</button>
       {(from || to) && (
-        <Link href={action} className="flex h-11 items-center rounded-xl px-3 text-sm text-ink/60 hover:bg-ivory-2">Todo o período</Link>
+        <Link href={action} className="flex h-11 items-center rounded-xl px-3 text-sm text-ink/60 hover:bg-cream-2">Todo o período</Link>
       )}
     </Form>
   );

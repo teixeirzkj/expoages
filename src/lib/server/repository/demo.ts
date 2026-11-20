@@ -3,6 +3,7 @@ import { randomUUID, timingSafeEqual } from "node:crypto";
 import {
   FEEDBACK_KINDS,
   OUVIDORIA_CATEGORIES,
+  type CourseEnrollment,
   type FeedbackRecord,
   type OuvidoriaRecord,
   type SubmissionFilters,
@@ -120,6 +121,13 @@ export const demoRepository: Repository = {
     s.pulse.length = Math.min(s.pulse.length, MAX_ITEMS * 2);
   },
 
+  async insertEnrollment(input) {
+    const s = state();
+    const rec: CourseEnrollment = { ...input, id: randomUUID(), status: "recebida", createdAt: nowIso() };
+    s.enrollments.unshift(rec);
+    s.enrollments.length = Math.min(s.enrollments.length, MAX_ITEMS);
+  },
+
   async track(reference, secretHash) {
     const s = state();
     const stored = s.secrets[reference];
@@ -204,5 +212,28 @@ export const demoRepository: Repository = {
   async deleteAction(id) {
     const s = state();
     s.actions = s.actions.filter((a) => a.id !== id);
+  },
+
+  async listEnrollments(filters = {}) {
+    const q = filters.q?.toLowerCase();
+    return state()
+      .enrollments.filter(
+        (e) =>
+          (!filters.course || e.course === filters.course) &&
+          (!filters.status || e.status === filters.status) &&
+          (!q || e.fullName.toLowerCase().includes(q) || e.email.includes(q)),
+      )
+      .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      .map((e) => ({ ...e }));
+  },
+
+  async updateEnrollmentStatus(id, status) {
+    const e = state().enrollments.find((x) => x.id === id);
+    if (e) e.status = status;
+  },
+
+  async deleteEnrollment(id) {
+    const s = state();
+    s.enrollments = s.enrollments.filter((e) => e.id !== id);
   },
 };

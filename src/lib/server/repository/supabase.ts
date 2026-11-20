@@ -4,6 +4,10 @@ import {
   FEEDBACK_KINDS,
   OUVIDORIA_CATEGORIES,
   type ActionPlan,
+  type CourseEnrollment,
+  type CourseKey,
+  type CourseShift,
+  type EnrollmentStatus,
   type FeedbackKind,
   type FeedbackRecord,
   type OuvidoriaCategory,
@@ -20,6 +24,8 @@ import { RepositoryError, type Repository } from "./types";
 const OUV_COLS = "id, reference, category, topic, description, impact, status, created_at, updated_at";
 const FB_COLS = "id, reference, kind, topic, area, message, rating, status, created_at, updated_at";
 const ACTION_COLS = "id, title, description, category, priority, owner, status, due_date, linked_reference, created_at";
+
+const ENROLL_COLS = "id, full_name, email, course, shift, area, status, created_at";
 
 type Row = Record<string, unknown>;
 
@@ -107,6 +113,18 @@ export const supabaseRepository: Repository = {
   async insertPulse(input) {
     const { error } = await anon().from("pulse_responses").insert(input);
     if (error) fail("insert pulse", error);
+  },
+
+  async insertEnrollment(input) {
+    const { error } = await anon().from("course_enrollments").insert({
+      full_name: input.fullName,
+      email: input.email,
+      course: input.course,
+      shift: input.shift,
+      area: input.area,
+      consent: true,
+    });
+    if (error) fail("insert enrollment", error);
   },
 
   async track(reference, secretHash) {
@@ -266,5 +284,40 @@ export const supabaseRepository: Repository = {
     const db = await session();
     const { error } = await db.from("action_plans").delete().eq("id", id);
     if (error) fail("delete action", error);
+  },
+
+  async listEnrollments(filters = {}) {
+    const db = await session();
+    let query = db.from("course_enrollments").select(ENROLL_COLS).order("created_at", { ascending: false }).limit(2000);
+    if (filters.course) query = query.eq("course", filters.course);
+    if (filters.status) query = query.eq("status", filters.status);
+    const q = filters.q ? safeSearch(filters.q) : "";
+    if (q) query = query.or(`full_name.ilike.*${q}*,email.ilike.*${q}*`);
+    const { data, error } = await query;
+    if (error) fail("list enrollments", error);
+    return ((data ?? []) as unknown as Row[]).map(
+      (r): CourseEnrollment => ({
+        id: String(r.id),
+        fullName: String(r.full_name),
+        email: String(r.email),
+        course: r.course as CourseKey,
+        shift: r.shift as CourseShift,
+        area: (r.area as string | null) ?? null,
+        status: r.status as EnrollmentStatus,
+        createdAt: String(r.created_at),
+      }),
+    );
+  },
+
+  async updateEnrollmentStatus(id, status) {
+    const db = await session();
+    const { error } = await db.from("course_enrollments").update({ status }).eq("id", id);
+    if (error) fail("update enrollment", error);
+  },
+
+  async deleteEnrollment(id) {
+    const db = await session();
+    const { error } = await db.from("course_enrollments").delete().eq("id", id);
+    if (error) fail("delete enrollment", error);
   },
 };

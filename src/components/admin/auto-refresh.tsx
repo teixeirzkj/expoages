@@ -32,7 +32,7 @@ export function AutoRefresh({ seconds = 12 }: { seconds?: number }) {
     <button
       type="button"
       onClick={() => start(() => router.refresh())}
-      className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-xs text-ink/55 ring-1 ring-petrol/10 hover:bg-ivory-2"
+      className="inline-flex h-9 items-center gap-2 rounded-full px-3 text-xs text-ink/55 ring-1 ring-navy/10 hover:bg-cream-2"
       title="Atualizar agora"
     >
       <RefreshCw className={cn("size-3.5", pending && "animate-spin")} aria-hidden />

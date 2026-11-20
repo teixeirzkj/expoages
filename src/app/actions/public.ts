@@ -6,6 +6,7 @@ import { checkRateLimit, looksAutomated } from "@/lib/server/rate-limit";
 import { getRepository, RepositoryError, resolvePublicMode } from "@/lib/server/repository";
 import {
   antiAbuseSchema,
+  enrollmentSchema,
   feedbackSchema,
   fieldErrors,
   firstError,
@@ -18,7 +19,7 @@ export type SubmitResult =
   | { ok: true; protocol: string; mode: DataMode }
   | { ok: false; error: string; fields?: Record<string, string> };
 
-export type SimpleResult = { ok: true; mode: DataMode } | { ok: false; error: string };
+export type SimpleResult = { ok: true; mode: DataMode } | { ok: false; error: string; fields?: Record<string, string> };
 
 export type TrackActionResult = { ok: true; data: TrackResult } | { ok: false; error: string };
 
@@ -85,6 +86,22 @@ export async function submitPulse(raw: unknown): Promise<SimpleResult> {
   if (!parsed.success) return { ok: false, error: "Responda todas as perguntas para enviar." };
   try {
     await getRepository(mode).insertPulse(parsed.data);
+    return { ok: true, mode };
+  } catch (error) {
+    return { ok: false, error: toError(error) };
+  }
+}
+
+export async function submitEnrollment(raw: unknown): Promise<SimpleResult> {
+  const mode = await resolvePublicMode();
+  const blocked = await guard("enrollment", raw, mode);
+  if (blocked) return { ok: false, error: blocked };
+
+  const parsed = enrollmentSchema.safeParse(raw);
+  if (!parsed.success) return { ok: false, error: firstError(parsed.error), fields: fieldErrors(parsed.error) };
+  try {
+    const { fullName, email, course, shift, area } = parsed.data;
+    await getRepository(mode).insertEnrollment({ fullName, email, course, shift, area });
     return { ok: true, mode };
   } catch (error) {
     return { ok: false, error: toError(error) };

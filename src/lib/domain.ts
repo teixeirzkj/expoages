@@ -191,3 +191,60 @@ export interface SubmissionFilters {
   from?: string;
   to?: string;
 }
+
+// ---------------------------------------------------------------------------
+// Cursos profissionalizantes (inscrição IDENTIFICADA, separada dos canais anônimos)
+// ---------------------------------------------------------------------------
+
+export const COURSES = {
+  rotinas_administrativas: {
+    label: "Rotinas administrativas",
+    description: "Organização de documentos, agenda, atendimento interno e processos de escritório.",
+  },
+  informatica_basica: {
+    label: "Informática básica",
+    description: "Computador, internet, e-mail, editores de texto e planilhas no dia a dia.",
+  },
+  ingles_basico: {
+    label: "Língua inglesa — nível básico",
+    description: "Vocabulário, leitura e conversação essenciais para começar.",
+  },
+  oratoria: {
+    label: "Oratória",
+    description: "Falar em público com clareza e segurança, em reuniões e atendimentos.",
+  },
+} as const;
+export type CourseKey = keyof typeof COURSES;
+
+export const COURSE_SHIFTS = {
+  manha: "Manhã",
+  tarde: "Tarde",
+  noite: "Noite",
+  flexivel: "Sem preferência",
+} as const;
+export type CourseShift = keyof typeof COURSE_SHIFTS;
+
+export const ENROLLMENT_STATUSES = {
+  recebida: "Recebida",
+  contatado: "Contato enviado",
+  confirmada: "Confirmada",
+  cancelada: "Cancelada",
+} as const;
+export type EnrollmentStatus = keyof typeof ENROLLMENT_STATUSES;
+
+export interface CourseEnrollment {
+  id: string;
+  fullName: string;
+  email: string;
+  course: CourseKey;
+  shift: CourseShift;
+  area: string | null;
+  status: EnrollmentStatus;
+  createdAt: string;
+}
+
+export interface EnrollmentFilters {
+  course?: CourseKey;
+  status?: EnrollmentStatus;
+  q?: string;
+}

@@ -1,99 +1,143 @@
 import { siteConfig } from "@/config/site";
-import { AnimatedHeading } from "@/components/motion/animated-heading";
-import { Counter } from "@/components/motion/counter";
 import { Reveal } from "@/components/motion/reveal";
+import { Disclosure } from "@/components/ui/disclosure";
 
-const TOPICS = [
-  { k: "Tema", v: siteConfig.academic.title },
-  { k: "Disciplina", v: siteConfig.academic.course },
+const PROJECT = [
   {
-    k: "Objetivo",
-    v: "Propor um programa que una canais de escuta, feedback e reconhecimento para apoiar a saúde e a motivação dos funcionários de uma empresa.",
+    title: "Tema do trabalho",
+    content: <p>{siteConfig.academic.title}.</p>,
   },
   {
-    k: "Psicologia Organizacional e do Trabalho",
-    v: "Estuda como o trabalho afeta o bem-estar das pessoas e como as organizações podem favorecer ambientes mais saudáveis — base para compreender motivação, desgaste e reconhecimento.",
+    title: "Psicologia Organizacional e do Trabalho",
+    content: (
+      <p>
+        Estuda como o trabalho afeta o bem-estar das pessoas e como as organizações podem favorecer ambientes mais saudáveis — a
+        base para compreender motivação, desgaste e reconhecimento.
+      </p>
+    ),
   },
   {
-    k: "Papel da tecnologia",
-    v: "A plataforma é uma ferramenta de apoio: facilita a escuta e a organização das informações, mas não substitui o diálogo, a liderança atenta nem o cuidado profissional.",
+    title: "Papel da tecnologia",
+    content: (
+      <p>
+        A plataforma é uma ferramenta de apoio: facilita a escuta e a organização das informações, mas não substitui o diálogo, a
+        liderança atenta nem o cuidado profissional.
+      </p>
+    ),
   },
 ];
 
-function Placeholder({ value }: { value: string }) {
-  return value ? <span>{value}</span> : <span className="italic text-ink/40">A definir</span>;
+const FAQ = [
+  {
+    title: "Preciso me identificar para usar a ouvidoria?",
+    content: (
+      <p>
+        Não. Ouvidoria, feedback e pesquisa não pedem nome, e-mail, telefone, CPF ou cadastro, e a aplicação não grava seu
+        endereço de rede. Ainda assim, detalhes muito específicos no texto podem indicar quem escreveu, e serviços de hospedagem
+        podem manter registros técnicos próprios.
+      </p>
+    ),
+  },
+  {
+    title: "Quem pode ver minha mensagem?",
+    content: (
+      <p>
+        Somente administradores autorizados, por um painel com login. O banco de dados bloqueia qualquer leitura pública, e nada é
+        publicado automaticamente no site.
+      </p>
+    ),
+  },
+  {
+    title: "Como acompanho uma manifestação?",
+    content: (
+      <p>
+        Ao enviar, você recebe um protocolo no formato HZ-XXXX-XXXX-XXXX-XXXX. Use “Acompanhe pelo protocolo” e digite o código
+        completo para ver o andamento e as devolutivas. Guarde-o: ele não pode ser recuperado.
+      </p>
+    ),
+  },
+  {
+    title: "Por que a inscrição nos cursos pede nome e e-mail?",
+    content: (
+      <p>
+        Porque a coordenação precisa entrar em contato para enviar datas, horários e local. Esses dados são usados apenas para
+        isso, ficam separados das mensagens anônimas e só a gestão autorizada tem acesso.
+      </p>
+    ),
+  },
+  {
+    title: "Como a empresa usa as sugestões?",
+    content: (
+      <p>
+        A gestão classifica os registros, identifica temas recorrentes, define prioridades e transforma o que foi recebido em um
+        plano de ações com responsáveis e prazos — devolvendo à equipe o que foi decidido.
+      </p>
+    ),
+  },
+];
+
+function Value({ value }: { value: string }) {
+  return value ? <>{value}</> : <span className="italic text-slate">A definir</span>;
 }
 
 export function About() {
   const a = siteConfig.academic;
   const c = siteConfig.company;
-  return (
-    <section id="sobre" aria-label="Sobre o projeto" className="relative bg-ivory section-y">
-      <div className="container-editorial">
-        <div className="grid gap-8 lg:grid-cols-12">
-          <p className="eyebrow text-terracotta-2 lg:col-span-3">08 — Sobre o trabalho</p>
-          <AnimatedHeading
-            lines={["Uma proposta acadêmica", "com um _cenário fictício._"]}
-            accentClassName="text-terracotta-2"
-            className="display-lg text-petrol lg:col-span-9"
-          />
-        </div>
+  const facts = [
+    { k: "Disciplina", v: a.course },
+    { k: "Instituição", v: a.institution },
+    { k: "Orientação", v: a.advisor },
+    { k: "Integrantes", v: a.members.join(", ") },
+    { k: "Evento", v: [a.event, a.year].filter(Boolean).join(" · ") },
+  ];
 
-        <div className="mt-16 grid gap-14 lg:grid-cols-12">
-          <Reveal as="dl" className="divide-y divide-petrol/12 border-y border-petrol/12 lg:col-span-7">
-            {TOPICS.map((t) => (
-              <div key={t.k} data-reveal className="grid gap-2 py-6 md:grid-cols-[13rem_1fr] md:gap-8">
-                <dt className="text-sm font-semibold text-petrol">{t.k}</dt>
-                <dd className="text-ink/75">{t.v}</dd>
+  return (
+    <section id="sobre" aria-labelledby="sobre-title" className="section-y bg-cream">
+      <div className="container-editorial grid gap-10 lg:grid-cols-12 lg:gap-14">
+        <Reveal className="lg:col-span-5">
+          <p data-reveal className="eyebrow text-blue">Sobre o projeto</p>
+          <h2 data-reveal id="sobre-title" className="display-lg mt-3 text-navy">
+            Uma proposta acadêmica com um cenário fictício.
+          </h2>
+          <p data-reveal className="mt-4 text-slate">
+            O objetivo é propor um programa que una escuta, feedback e reconhecimento para apoiar a saúde e a motivação dos
+            funcionários de uma empresa.
+          </p>
+
+          <dl data-reveal className="mt-8 divide-y divide-navy/8 rounded-[var(--radius-card)] bg-white px-5 ring-1 ring-navy/8">
+            {facts.map((f) => (
+              <div key={f.k} className="flex justify-between gap-6 py-3 text-sm">
+                <dt className="text-slate">{f.k}</dt>
+                <dd className="text-right font-medium text-ink">
+                  <Value value={f.v} />
+                </dd>
               </div>
             ))}
-          </Reveal>
+          </dl>
+          {a.institutionLogoSrc ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={a.institutionLogoSrc} alt={`Logo ${a.institution}`} className="mt-6 h-10 w-auto" />
+          ) : null}
 
-          <div className="space-y-5 lg:col-span-5">
-            <Reveal variant="clip" className="rounded-[var(--radius-card)] bg-petrol p-8 text-ivory">
-              <p className="eyebrow text-sage">Empresa estudada</p>
-              <p className="mt-4 font-display text-2xl leading-snug">{c.name}</p>
-              <p className="mt-1 text-sm text-ivory/60">{c.nature}</p>
-              <dl className="mt-8 grid grid-cols-2 gap-6">
-                <div>
-                  <dt className="text-xs text-ivory/55">Colaboradores no cenário</dt>
-                  <dd className="mt-1 font-display text-4xl"><Counter value={c.employees} /></dd>
-                </div>
-                <div>
-                  <dt className="text-xs text-ivory/55">Fundação (fictícia)</dt>
-                  <dd className="mt-1 font-display text-4xl">{c.founded}</dd>
-                </div>
-                <div className="col-span-2">
-                  <dt className="text-xs text-ivory/55">Atuação</dt>
-                  <dd className="mt-1 text-ivory/85">{c.segment} · {c.location}</dd>
-                </div>
-              </dl>
-            </Reveal>
-
-            <Reveal className="rounded-[var(--radius-card)] border border-petrol/15 p-8">
-              <p data-reveal className="eyebrow text-terracotta-2">Ficha do projeto</p>
-              <dl data-reveal className="mt-6 space-y-4 text-sm">
-                <div className="flex justify-between gap-6"><dt className="text-ink/55">Instituição</dt><dd className="text-right font-medium"><Placeholder value={a.institution} /></dd></div>
-                <div className="flex justify-between gap-6"><dt className="text-ink/55">Orientação</dt><dd className="text-right font-medium"><Placeholder value={a.advisor} /></dd></div>
-                <div className="flex justify-between gap-6"><dt className="text-ink/55">Evento</dt><dd className="text-right font-medium"><Placeholder value={[a.event, a.year].filter(Boolean).join(" · ")} /></dd></div>
-                <div className="flex justify-between gap-6">
-                  <dt className="text-ink/55">Integrantes</dt>
-                  <dd className="text-right font-medium">
-                    {a.members.length ? (
-                      <ul>{a.members.map((m) => <li key={m}>{m}</li>)}</ul>
-                    ) : (
-                      <Placeholder value="" />
-                    )}
-                  </dd>
-                </div>
-              </dl>
-              {a.institutionLogoSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img data-reveal src={a.institutionLogoSrc} alt={`Logo ${a.institution}`} className="mt-8 h-12 w-auto" />
-              ) : null}
-            </Reveal>
+          <div data-reveal className="mt-4 rounded-[var(--radius-card)] bg-navy p-5 text-cream">
+            <p className="text-xs font-semibold text-sky">Empresa do cenário (fictícia)</p>
+            <p className="mt-1.5 font-display text-lg font-semibold text-white">{c.name}</p>
+            <p className="mt-1 text-sm text-cream/70">
+              {c.employees} colaboradores · desde {c.founded} · {c.segment.toLowerCase()} · {c.location}
+            </p>
           </div>
-        </div>
+        </Reveal>
+
+        <Reveal className="space-y-10 lg:col-span-7">
+          <div data-reveal>
+            <h3 className="text-sm font-semibold text-slate">O trabalho</h3>
+            <Disclosure className="mt-3" items={PROJECT} />
+          </div>
+          <div data-reveal>
+            <h3 className="text-sm font-semibold text-slate">Perguntas frequentes</h3>
+            <Disclosure className="mt-3" items={FAQ} />
+          </div>
+        </Reveal>
       </div>
     </section>
   );

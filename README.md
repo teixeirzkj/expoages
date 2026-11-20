@@ -2,7 +2,8 @@
 
 Plataforma acadêmica da disciplina **Gestão de Comportamento de Pessoas**, aplicada à empresa fictícia
 **Horizonte Soluções Integradas Ltda.** Reúne site público, ouvidoria anônima com protocolo, reconhecimentos e
-feedbacks, pesquisa de pulso, painel administrativo com plano de ações e um modo de demonstração para a ExpoAgro.
+feedbacks, pesquisa de percepção, inscrição em cursos profissionalizantes, painel administrativo com plano de ações e
+um modo de demonstração para a ExpoAgro.
 
 > A empresa e todos os dados de exemplo são fictícios. Nenhum indicador exibido representa resultado real.
 
@@ -58,14 +59,18 @@ Copie `.env.example` para `.env.local` e preencha:
 ## 3. Criar o banco (Supabase)
 
 1. Crie um projeto em [supabase.com](https://supabase.com).
-2. Abra **SQL Editor**, cole o conteúdo de [`supabase/migrations/20261120000000_init.sql`](supabase/migrations/20261120000000_init.sql) e execute.
+2. Abra **SQL Editor** e execute, nesta ordem, [`supabase/migrations/20261120000000_init.sql`](supabase/migrations/20261120000000_init.sql)
+   e [`supabase/migrations/20261121000000_course_enrollments.sql`](supabase/migrations/20261121000000_course_enrollments.sql)
+   (a segunda só adiciona a tabela de inscrições; não altera nada existente).
    (Ou, com a Supabase CLI: `supabase link` e `supabase db push`.)
 3. Em **Authentication → Providers → Email**, mantenha o login por e-mail e **desative “Allow new users to sign up”**
    (Authentication → Sign In / Providers). Assim ninguém cria conta pela API.
 
 A migration cria as tabelas `ouvidoria_submissions`, `feedback_submissions`, `pulse_responses`, `action_plans`,
 `admin_profiles`, `admin_notes`, `admin_responses` e `submission_events`, além das políticas RLS e da função
-`track_submission` (consulta por protocolo).
+`track_submission` (consulta por protocolo). A segunda cria `course_enrollments`: o único formulário identificado
+(nome e e-mail para contato), com inserção pública restrita a colunas permitidas e leitura/alteração/exclusão só para
+administradores.
 
 ## 4. Primeiro administrador
 
@@ -138,7 +143,8 @@ grupos de visitantes; peça que ninguém escreva dados reais.
   (seção “Paleta da marca”). Troque os valores `--brand-*` — os componentes usam somente esses tokens.
 - **Cores dos gráficos:** tokens `--chart-1…4` no mesmo arquivo. Foram validados para daltonismo e contraste; se
   trocar, mantenha cores com luminosidade média e boa separação entre si.
-- **Tipografia:** [`src/config/fonts.ts`](src/config/fonts.ts) (Fraunces para títulos, Manrope para textos).
+- **Tipografia:** [`src/config/fonts.ts`](src/config/fonts.ts) (IBM Plex Sans para títulos, Inter para textos). A
+  escala (`.display-xl`, `.display-lg`, `.display-md`) usa `clamp()` em `globals.css`.
 - **Logotipo:** coloque o arquivo em `public/` (ex.: `public/logo.svg`) e defina `logoSrc: "/logo.svg"` em
   [`src/config/site.ts`](src/config/site.ts). Vazio = marca provisória em SVG.
 
@@ -148,7 +154,10 @@ grupos de visitantes; peça que ninguém escreva dados reais.
   [`src/config/site.ts`](src/config/site.ts). Campos vazios aparecem como “A definir”.
 - **Empresa fictícia:** campo `company` no mesmo arquivo.
 - **Textos das seções:** cada seção está em [`src/components/sections/`](src/components/sections/)
-  (`hero.tsx`, `problem.tsx`, `program.tsx`, `faq.tsx`, …).
+  — cinco áreas: `hero.tsx`, `program.tsx` (problema, pilares e Herzberg), `how-it-works.tsx`,
+  `participate.tsx` (abas: ouvidoria, feedback, pesquisa e cursos) e `about.tsx` (projeto e FAQ).
+- **Cursos oferecidos:** `COURSES` em [`src/lib/domain.ts`](src/lib/domain.ts). Ao incluir um curso, atualize também
+  o `check` da coluna `course` na migration de inscrições.
 - **Categorias, perguntas do pulso e limites de texto:** [`src/lib/domain.ts`](src/lib/domain.ts) (se mudar
   categorias, atualize também os `check` da migration SQL).
 - **Dados fictícios da demonstração:** [`src/lib/demo/seed.ts`](src/lib/demo/seed.ts).
@@ -170,8 +179,12 @@ Sem as variáveis, o deploy funciona normalmente em modo demonstração (com a r
 ## Arquitetura
 
 - **Next.js 16 (App Router, Cache Components) + React 19 + TypeScript**, Tailwind CSS v4, shadcn/ui (Base UI).
-- **Animação:** Lenis (scroll suave só em desktop com mouse) + GSAP ScrollTrigger (storytelling por rolagem) +
-  Motion (microinterações). Tudo respeita `prefers-reduced-motion`; sem JavaScript o conteúdo continua visível.
+- **Rolagem e animação:** scroll 100% nativo (sem Lenis/GSAP). Revelações de entrada com um único
+  IntersectionObserver + transições CSS de `opacity`/`transform`; Motion apenas para microinterações de formulários
+  e do painel. Tudo respeita `prefers-reduced-motion`; sem JavaScript o conteúdo continua visível.
+  Medição (Chrome, CPU 4× mais lenta, rolagem contínua no desktop): tarefas longas durante a rolagem caíram de 6
+  (≈1,4 s) para 2 (≈0,3 s), que ocorrem logo após o carregamento e não pela rolagem; tempo total de main thread
+  de ≈31 s para ≈10 s.
 - **Gráficos:** Recharts, com tabela alternativa em cada gráfico.
 - **Dados:** contrato único `Repository` com duas implementações — Supabase (live) e memória fictícia (demo).
   As telas do painel são as mesmas para `/admin` e `/demo`, recebendo o modo como parâmetro.
@@ -179,14 +192,14 @@ Sem as variáveis, o deploy funciona normalmente em modo demonstração (com a r
 
 ```
 src/
-  app/                 rotas (site, /admin, /demo, /apresentacao, /design-lab, /api/export) e Server Actions
+  app/                 rotas (site, /admin, /demo, /apresentacao, /api/export) e Server Actions
   components/
     sections/          seções do site público
-    forms/             ouvidoria, feedback, pulso, consulta por protocolo, painel de participação
-    motion/            AnimatedHeading, Reveal, Magnetic, ScrollProgress, LineGrow, Counter, SmoothScroll
+    forms/             ouvidoria, feedback, pesquisa, inscrição em curso, consulta por protocolo
+    motion/            Reveal (entrada discreta), scroll-to (rolagem nativa até âncoras)
     admin/             shell, sidebar, tabelas, Kanban, controles e telas (screens/)
     charts/            gráficos Recharts
-    layout/ brand/ design-lab/ ui/
+    layout/ brand/ ui/
   config/              site.ts (conteúdo e identidade), fonts.ts
   lib/                 domínio, validação, análises, formatação, CSV
     server/            Supabase, autenticação, repositórios, protocolo, rate limit
@@ -194,8 +207,6 @@ src/
 supabase/migrations/   schema, RLS e funções
 ```
 
-`/design-lab` mostra os três conceitos visuais de abertura (A — editorial humanizado, em uso; B — institucional
-contemporâneo; C — experiência narrativa) e só existe em desenvolvimento.
 
 ## Segurança e privacidade
 

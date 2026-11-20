@@ -1,23 +1,22 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { Menu, MessageSquareText, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { navItems, siteConfig } from "@/config/site";
 import { Logo } from "@/components/brand/logo";
-import { ActionButton } from "@/components/brand/action-button";
-import { useScrollTo } from "@/components/motion/smooth-scroll";
+import { useParticipation } from "@/components/forms/participation";
+import { scrollToTarget } from "@/components/motion/scroll-to";
 import { cn } from "@/lib/utils";
 
+/** Seção ativa via IntersectionObserver (sem listener de scroll). */
 function useActiveSection(ids: readonly string[]) {
   const [active, setActive] = useState<string>(ids[0]);
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]) setActive(visible[0].target.id);
+        for (const e of entries) if (e.isIntersecting) setActive(e.target.id);
       },
-      { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.25, 0.5] },
+      { rootMargin: "-40% 0px -55% 0px" },
     );
     ids.forEach((id) => {
       const el = document.getElementById(id);
@@ -28,20 +27,32 @@ function useActiveSection(ids: readonly string[]) {
   return active;
 }
 
-export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
-  const scrollTo = useScrollTo();
-  const ids = navItems.map((n) => n.id);
-  const active = useActiveSection(ids);
-  const firstLink = useRef<HTMLButtonElement>(null);
-
+/** Verdadeiro enquanto o topo da página (hero escuro) está sob o header. */
+function useOverHero() {
+  const [over, setOver] = useState(true);
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 48);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const hero = document.getElementById("inicio");
+    if (!hero) return;
+    // A "raiz" é só a faixa do header (topo da janela, 64px de altura).
+    const observer = new IntersectionObserver(([e]) => setOver(e.isIntersecting), {
+      rootMargin: `0px 0px -${Math.max(0, window.innerHeight - 64)}px 0px`,
+    });
+    observer.observe(hero);
+    return () => observer.disconnect();
   }, []);
+  return over;
+}
+
+const IDS = navItems.map((n) => n.id);
+
+export function SiteHeader() {
+  const [open, setOpen] = useState(false);
+  const active = useActiveSection(IDS);
+  const overHero = useOverHero();
+  const { selectTab } = useParticipation();
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const firstLink = useRef<HTMLButtonElement>(null);
+  const dark = overHero && !open;
 
   useEffect(() => {
     if (!open) return;
@@ -50,149 +61,124 @@ export function SiteHeader() {
     firstLink.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
+    const button = menuButton.current;
     return () => {
       document.body.style.overflow = prev;
       window.removeEventListener("keydown", onKey);
+      button?.focus();
     };
   }, [open]);
 
   const go = (id: string) => {
     setOpen(false);
-    // Aguarda o menu fechar antes de rolar (evita salto no iOS).
-    window.setTimeout(() => scrollTo(`#${id}`), open ? 280 : 0);
+    // Espera o menu fechar (e liberar o scroll do body) antes de rolar.
+    requestAnimationFrame(() => scrollToTarget(`#${id}`));
+  };
+  const toOuvidoria = () => {
+    setOpen(false);
+    requestAnimationFrame(() => selectTab("ouvidoria", { scroll: true }));
   };
 
   return (
-    <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[padding] duration-500 ease-[var(--ease-out-expo)]",
-          scrolled ? "pt-3" : "pt-5",
-        )}
-      >
-        <div className="container-editorial">
-          <div
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 h-[var(--header-h)] border-b transition-colors duration-200",
+        dark ? "surface-dark border-transparent bg-navy text-cream" : "border-navy/8 bg-cream text-navy",
+      )}
+    >
+      <div className="container-editorial flex h-full items-center justify-between gap-4">
+        <button type="button" onClick={() => go("inicio")} aria-label={`${siteConfig.platformName} — voltar ao início`} className="rounded-md">
+          <Logo tone={dark ? "light" : "dark"} />
+        </button>
+
+        <nav aria-label="Navegação principal" className="hidden lg:block">
+          <ul className="flex items-center gap-1">
+            {navItems.map((item) => {
+              const isActive = active === item.id;
+              return (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => go(item.id)}
+                    aria-current={isActive ? "true" : undefined}
+                    className={cn(
+                      "relative rounded-md px-3 py-2 text-[0.9375rem] font-medium transition-colors after:absolute after:inset-x-3 after:-bottom-0.5 after:h-0.5 after:origin-left after:rounded-full after:transition-transform after:duration-300",
+                      dark ? "after:bg-sky" : "after:bg-navy",
+                      isActive
+                        ? cn(dark ? "text-white" : "text-navy", "after:scale-x-100")
+                        : cn(dark ? "text-cream/70 hover:text-white" : "text-slate hover:text-navy", "after:scale-x-0"),
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toOuvidoria}
             className={cn(
-              "flex h-[3.75rem] items-center justify-between gap-4 rounded-full pl-4 pr-2 transition-[background-color,box-shadow,backdrop-filter] duration-500",
-              scrolled
-                ? "bg-ivory/88 shadow-[0_1px_0_rgba(23,58,60,0.08),0_12px_40px_-24px_rgba(20,36,43,0.45)] backdrop-blur-md"
-                : "bg-transparent",
+              "hidden h-10 items-center gap-2 rounded-full px-4 text-sm font-semibold transition-colors sm:inline-flex",
+              dark ? "bg-white text-navy hover:bg-sky" : "bg-navy text-white hover:bg-blue",
             )}
           >
-            <button type="button" onClick={() => go("inicio")} aria-label={`${siteConfig.platformName} — voltar ao início`} className="rounded-full">
-              <Logo />
-            </button>
-
-            <nav aria-label="Navegação principal" className="hidden xl:block">
-              <ul className="flex items-center gap-1">
-                {navItems.map((item) => {
-                  const isActive = active === item.id;
-                  return (
-                    <li key={item.id}>
-                      <button
-                        type="button"
-                        onClick={() => go(item.id)}
-                        aria-current={isActive ? "true" : undefined}
-                        className={cn(
-                          "relative rounded-full px-3.5 py-2 text-[0.9rem] font-medium transition-colors",
-                          isActive ? "text-petrol" : "text-ink/60 hover:text-petrol",
-                        )}
-                      >
-                        {isActive && (
-                          <motion.span
-                            layoutId="nav-active"
-                            className="absolute inset-0 -z-0 rounded-full bg-sage-2"
-                            transition={{ type: "spring", stiffness: 380, damping: 34 }}
-                          />
-                        )}
-                        <span className="relative">{item.label}</span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-
-            <div className="flex items-center gap-2">
-              <ActionButton
-                size="sm"
-                className="hidden h-11 px-5 sm:inline-flex"
-                icon={<ArrowUpRight className="size-4" />}
-                onClick={() => go("participar")}
-              >
-                Quero participar
-              </ActionButton>
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                className="inline-flex size-11 items-center justify-center rounded-full bg-petrol text-ivory xl:hidden"
-                aria-label="Abrir menu"
-                aria-expanded={open}
-                aria-controls="mobile-menu"
-              >
-                <Menu className="size-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            id="mobile-menu"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu"
-            className="fixed inset-0 z-[70] flex flex-col bg-petrol text-ivory grain"
-            initial={{ clipPath: "circle(0% at calc(100% - 2.5rem) 2.5rem)" }}
-            animate={{ clipPath: "circle(150% at calc(100% - 2.5rem) 2.5rem)" }}
-            exit={{ clipPath: "circle(0% at calc(100% - 2.5rem) 2.5rem)" }}
-            transition={{ duration: 0.6, ease: [0.76, 0, 0.24, 1] }}
+            <MessageSquareText className="size-4" /> Ouvidoria
+          </button>
+          <button
+            ref={menuButton}
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            className={cn(
+              "inline-flex size-10 items-center justify-center rounded-full transition-colors lg:hidden",
+              dark ? "bg-white/10 text-white" : "bg-navy text-white",
+            )}
+            aria-label={open ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={open}
+            aria-controls="mobile-menu"
           >
-            <div className="container-editorial flex h-[5.25rem] items-center justify-between pt-5">
-              <Logo tone="light" />
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="inline-flex size-11 items-center justify-center rounded-full bg-ivory text-petrol"
-                aria-label="Fechar menu"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-            <nav aria-label="Navegação" className="container-editorial flex flex-1 flex-col justify-center">
-              <ul className="space-y-1">
-                {navItems.map((item, i) => (
-                  <motion.li
-                    key={item.id}
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.18 + i * 0.05, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  >
-                    <button
-                      ref={i === 0 ? firstLink : undefined}
-                      type="button"
-                      onClick={() => go(item.id)}
-                      className="group flex w-full items-baseline gap-4 py-2 text-left"
-                    >
-                      <span className="w-6 text-xs tabular-nums text-sage">0{i + 1}</span>
-                      <span className={cn("font-display text-[2.4rem] leading-tight sm:text-5xl", active === item.id ? "text-terracotta" : "")}>
-                        {item.label}
-                      </span>
-                    </button>
-                  </motion.li>
-                ))}
-              </ul>
-            </nav>
-            <div className="container-editorial pb-[max(2rem,env(safe-area-inset-bottom))]">
-              <ActionButton variant="terracotta" size="lg" className="w-full" onClick={() => go("participar")} icon={<ArrowUpRight className="size-4" />}>
-                Quero participar
-              </ActionButton>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Menu do celular/tablet: painel simples logo abaixo do header */}
+      <div
+        id="mobile-menu"
+        hidden={!open}
+        className="fixed inset-x-0 bottom-0 top-[var(--header-h)] overflow-y-auto bg-cream animate-panel-in lg:hidden"
+      >
+        <nav aria-label="Menu" className="container-editorial flex min-h-full flex-col py-4">
+          <ul className="divide-y divide-navy/8">
+            {navItems.map((item, i) => (
+              <li key={item.id}>
+                <button
+                  ref={i === 0 ? firstLink : undefined}
+                  type="button"
+                  onClick={() => go(item.id)}
+                  className="flex w-full items-center justify-between py-4 text-left"
+                >
+                  <span className={cn("font-display text-xl font-semibold", active === item.id ? "text-navy" : "text-navy/75")}>
+                    {item.label}
+                  </span>
+                  <span className="text-xs tabular-nums text-slate">0{i + 1}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+          <button
+            type="button"
+            onClick={toOuvidoria}
+            className="mt-auto flex h-12 w-full items-center justify-center gap-2 rounded-full bg-navy text-[0.9375rem] font-semibold text-white"
+          >
+            <MessageSquareText className="size-4" /> Acessar a ouvidoria
+          </button>
+          <div className="h-[env(safe-area-inset-bottom)]" />
+        </nav>
+      </div>
+    </header>
   );
 }

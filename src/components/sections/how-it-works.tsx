@@ -1,105 +1,98 @@
 "use client";
 
-import { useRef } from "react";
-import { MonitorSmartphone, ListChecks, Send, Inbox, ClipboardCheck } from "lucide-react";
-import { AnimatedHeading } from "@/components/motion/animated-heading";
-import { gsap, MOTION_OK, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { ClipboardCheck, Inbox, MessageSquareText, Search } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
+import { useParticipation } from "@/components/forms/participation";
 
 const STEPS = [
-  { icon: MonitorSmartphone, title: "O colaborador acessa a plataforma", text: "Pelo celular, computador ou em um totem/tablet na empresa — sem cadastro e sem login." },
-  { icon: ListChecks, title: "Escolhe o tipo de contribuição", text: "Ouvidoria anônima, reconhecimento, feedback construtivo ou a pesquisa de pulso." },
-  { icon: Send, title: "Envia sua mensagem", text: "O formulário orienta a não incluir dados pessoais. Ao final, um protocolo é gerado." },
-  { icon: Inbox, title: "A gestão recebe e analisa", text: "Apenas administradores autorizados acessam o painel, classificam e acompanham cada registro." },
-  { icon: ClipboardCheck, title: "A organização dá uma devolutiva", text: "Uma resposta ou ação de melhoria é registrada e pode ser consultada pelo protocolo." },
+  {
+    icon: MessageSquareText,
+    title: "Compartilhe sua experiência",
+    text: "Pelo celular, computador ou tablet: ouvidoria, reconhecimento, feedback ou pesquisa de percepção — sem cadastro e sem login.",
+    tags: ["Sem login", "Sem dados pessoais"],
+  },
+  {
+    icon: Inbox,
+    title: "A gestão recebe e analisa",
+    text: "Somente administradores autorizados acessam o painel, classificam os registros e identificam os temas que mais se repetem.",
+    tags: ["Acesso restrito", "Prioridades"],
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Acompanhe o retorno e as melhorias",
+    text: "Com o protocolo recebido no envio, você consulta o andamento e as devolutivas. O que é decidido vira ação com responsável e prazo.",
+    tags: ["Protocolo", "Plano de ações"],
+  },
+];
+
+const MANAGEMENT = [
+  "Identificar temas recorrentes",
+  "Organizar prioridades",
+  "Planejar ações com responsável e prazo",
+  "Devolver à equipe o que foi decidido",
 ];
 
 export function HowItWorks() {
-  const ref = useRef<HTMLElement>(null);
-
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        const root = ref.current!;
-        root.dataset.enhanced = "true";
-        const steps = gsap.utils.toArray<HTMLElement>("[data-step]");
-        gsap.fromTo(
-          "[data-track-fill]",
-          { scaleY: 0 },
-          {
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: { trigger: "[data-steps]", start: "top 60%", end: "bottom 60%", scrub: 0.5 },
-          },
-        );
-        steps.forEach((step, i) => {
-          ScrollTrigger.create({
-            trigger: step,
-            start: "top 62%",
-            end: "bottom 62%",
-            toggleClass: { targets: step, className: "is-active" },
-            onEnter: () => setCounter(i),
-            onEnterBack: () => setCounter(i),
-          });
-        });
-        function setCounter(i: number) {
-          const el = ref.current?.querySelector("[data-counter]");
-          if (el) el.textContent = String(i + 1).padStart(2, "0");
-        }
-        return () => {
-          delete root.dataset.enhanced;
-        };
-      });
-      mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.utils.toArray<HTMLElement>("[data-step]").forEach((s) => s.classList.add("is-active"));
-      });
-      return () => mm.revert();
-    },
-    { scope: ref },
-  );
+  const { openTracker } = useParticipation();
 
   return (
-    <section id="como-funciona" ref={ref} aria-label="Como funciona" className="group/how relative bg-ivory-2 section-y">
-      <div className="container-editorial grid gap-14 lg:grid-cols-12">
-        <div className="lg:col-span-5">
-          <div className="lg:sticky lg:top-32">
-            <p className="eyebrow text-terracotta-2">03 — Como funciona</p>
-            <AnimatedHeading
-              lines={["Da mensagem", "à _devolutiva_,", "em cinco passos."]}
-              accentClassName="text-terracotta-2"
-              className="display-lg mt-6 text-petrol"
-            />
-            <p className="mt-6 max-w-sm text-ink/65">
-              Uma jornada curta e transparente: quem participa sabe o que acontece com sua contribuição.
-            </p>
-            <p className="mt-12 hidden items-baseline gap-3 text-petrol lg:flex" aria-hidden>
-              <span data-counter className="font-display text-7xl tabular-nums leading-none">01</span>
-              <span className="text-sm text-ink/45">/ 05</span>
-            </p>
-          </div>
-        </div>
+    <section id="como-funciona" aria-labelledby="como-title" className="section-y bg-white">
+      <div className="container-editorial">
+        <Reveal className="max-w-2xl">
+          <p data-reveal className="eyebrow text-blue">Como funciona</p>
+          <h2 data-reveal id="como-title" className="display-lg mt-3 text-navy">
+            Da mensagem à devolutiva, em três etapas.
+          </h2>
+        </Reveal>
 
-        <ol data-steps className="relative lg:col-span-6 lg:col-start-7">
-          <span aria-hidden className="absolute bottom-6 left-[1.6rem] top-6 w-px bg-petrol/12">
-            <span data-track-fill className="absolute inset-0 origin-top bg-terracotta" />
-          </span>
-          {STEPS.map(({ icon: Icon, title, text }, i) => (
-            <li
-              key={title}
-              data-step
-              className="group/step relative flex gap-6 py-8 opacity-100 transition-opacity duration-500 md:py-12 group-data-[enhanced=true]/how:[&:not(.is-active)]:opacity-40"
-            >
-              <span className="relative z-10 flex size-[3.25rem] shrink-0 items-center justify-center rounded-full border border-petrol/15 bg-ivory text-petrol transition-[background-color,color,border-color] duration-500 group-[.is-active]/step:border-petrol group-[.is-active]/step:bg-petrol group-[.is-active]/step:text-ivory">
-                <Icon className="size-5" strokeWidth={1.6} />
+        <Reveal as="ol" className="relative mt-10 grid gap-4 md:mt-14 md:grid-cols-3 md:gap-6">
+          <span aria-hidden className="steps-line absolute left-[16.6%] right-[16.6%] top-7 hidden h-px bg-navy/15 md:block" />
+          {STEPS.map(({ icon: Icon, title, text, tags }, i) => (
+            <li key={title} data-reveal className="relative flex gap-4 rounded-[var(--radius-card)] bg-cream p-5 md:flex-col md:gap-0 md:bg-transparent md:p-0 md:text-center">
+              <span className="relative z-10 flex size-14 shrink-0 items-center justify-center rounded-full bg-navy text-white ring-8 ring-cream md:mx-auto md:ring-white">
+                <Icon className="size-6" strokeWidth={1.7} />
               </span>
-              <div className="pt-1.5">
-                <span className="text-xs font-semibold tabular-nums text-terracotta-2">Etapa {String(i + 1).padStart(2, "0")}</span>
-                <h3 className="mt-2 font-display text-[1.65rem] leading-tight text-petrol md:text-[2rem]">{title}</h3>
-                <p className="mt-3 max-w-md text-ink/65">{text}</p>
+              <div className="md:mt-5">
+                <p className="text-xs font-semibold tabular-nums text-blue">Etapa {i + 1}</p>
+                <h3 className="display-md mt-1 text-navy">{title}</h3>
+                <p className="mt-2 text-[0.9375rem] text-slate md:mx-auto md:max-w-[19rem]">{text}</p>
+                <ul className="mt-3 flex flex-wrap gap-1.5 md:justify-center">
+                  {tags.map((t) => (
+                    <li key={t} className="rounded-full bg-mist px-2.5 py-1 text-xs font-medium text-navy">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </li>
           ))}
-        </ol>
+        </Reveal>
+
+        <Reveal className="mt-10 grid gap-6 rounded-[var(--radius-card)] bg-navy p-6 text-cream md:mt-14 md:p-8 lg:grid-cols-12 lg:items-center surface-dark">
+          <div data-reveal className="lg:col-span-4">
+            <p className="font-display text-lg font-semibold text-white">Da escuta à ação</p>
+            <p className="mt-1 text-sm text-cream/70">O que a gestão faz com o que recebe.</p>
+          </div>
+          <ol data-reveal className="grid gap-3 sm:grid-cols-2 lg:col-span-5">
+            {MANAGEMENT.map((m, i) => (
+              <li key={m} className="flex items-start gap-2.5 text-sm text-cream/85">
+                <span className="mt-px flex size-5 shrink-0 items-center justify-center rounded-full bg-white/10 text-[0.6875rem] font-semibold tabular-nums text-sky">
+                  {i + 1}
+                </span>
+                {m}
+              </li>
+            ))}
+          </ol>
+          <div data-reveal className="lg:col-span-3 lg:text-right">
+            <button
+              type="button"
+              onClick={() => openTracker()}
+              className="inline-flex h-11 items-center gap-2 rounded-full border border-white/25 px-5 text-sm font-semibold text-white transition-colors hover:border-white/60"
+            >
+              <Search className="size-4" /> Acompanhar manifestação
+            </button>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -5,6 +5,7 @@
  */
 import type {
   ActionPlan,
+  CourseEnrollment,
   FeedbackRecord,
   OuvidoriaRecord,
   PulseResponse,
@@ -84,6 +85,16 @@ function mulberry32(seed: number) {
   };
 }
 
+/** Inscrições fictícias: nomes inventados e domínio reservado example.com. */
+const ENROLLMENTS: Omit<CourseEnrollment, "id" | "createdAt">[] = [
+  { fullName: "Pessoa Exemplo A", email: "pessoa.a@example.com", course: "informatica_basica", shift: "manha", area: "Atendimento receptivo", status: "confirmada" },
+  { fullName: "Pessoa Exemplo B", email: "pessoa.b@example.com", course: "oratoria", shift: "tarde", area: "Supervisão", status: "contatado" },
+  { fullName: "Pessoa Exemplo C", email: "pessoa.c@example.com", course: "ingles_basico", shift: "noite", area: null, status: "recebida" },
+  { fullName: "Pessoa Exemplo D", email: "pessoa.d@example.com", course: "rotinas_administrativas", shift: "flexivel", area: "Back-office", status: "recebida" },
+  { fullName: "Pessoa Exemplo E", email: "pessoa.e@example.com", course: "informatica_basica", shift: "tarde", area: "Atendimento ativo", status: "contatado" },
+  { fullName: "Pessoa Exemplo F", email: "pessoa.f@example.com", course: "oratoria", shift: "manha", area: "Qualidade e monitoria", status: "recebida" },
+];
+
 const ALPHABET = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
 
 export interface DemoState {
@@ -92,6 +103,7 @@ export interface DemoState {
   pulse: PulseResponse[];
   actions: ActionPlan[];
   timeline: Record<string, TimelineEntry[]>;
+  enrollments: CourseEnrollment[];
   secrets: Record<string, string>; // reference -> secretHash
 }
 
@@ -150,5 +162,11 @@ export function buildDemoState(now = Date.now()): DemoState {
     linkedReference: linkable[i]?.reference ?? null,
   }));
 
-  return { ouvidoria, feedback, pulse, actions, timeline, secrets: {} };
+  const enrollments = ENROLLMENTS.map((e, i): CourseEnrollment => ({
+    ...e,
+    id: id("cur", i),
+    createdAt: new Date(now - (1 + i * 3) * DAY - Math.floor(rand() * DAY)).toISOString(),
+  }));
+
+  return { ouvidoria, feedback, pulse, actions, timeline, enrollments, secrets: {} };
 }

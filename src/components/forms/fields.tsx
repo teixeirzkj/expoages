@@ -62,8 +62,8 @@ export function ChoiceGroup<T extends string>({
           <label
             key={opt.value}
             className={cn(
-              "relative flex min-h-14 cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 text-[0.95rem] transition-[border-color,background-color,color] duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-terracotta",
-              checked ? "border-petrol bg-petrol text-ivory" : "border-petrol/15 bg-card hover:border-petrol/40",
+              "relative flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-[0.95rem] transition-[border-color,background-color,color] duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-blue",
+              checked ? "border-navy bg-navy text-cream" : "border-navy/15 bg-card hover:border-navy/40",
             )}
           >
             <input
@@ -78,15 +78,15 @@ export function ChoiceGroup<T extends string>({
               aria-hidden
               className={cn(
                 "flex size-5 shrink-0 items-center justify-center rounded-full border transition-colors",
-                checked ? "border-ivory" : "border-petrol/30",
+                checked ? "border-cream" : "border-navy/30",
               )}
             >
-              <span className={cn("size-2.5 rounded-full transition-transform", checked ? "scale-100 bg-terracotta" : "scale-0")} />
+              <span className={cn("size-2.5 rounded-full transition-transform", checked ? "scale-100 bg-sky" : "scale-0")} />
             </span>
             <span className="leading-snug">
               <span className="font-medium">{opt.label}</span>
               {opt.description && (
-                <span className={cn("block text-xs", checked ? "text-ivory/70" : "text-ink/50")}>{opt.description}</span>
+                <span className={cn("block text-xs", checked ? "text-cream/70" : "text-ink/50")}>{opt.description}</span>
               )}
             </span>
           </label>
@@ -124,8 +124,8 @@ export function ScaleInput({
               aria-label={`${n} de 5`}
               onClick={() => onChange(checked && allowClear ? null : n)}
               className={cn(
-                "h-14 rounded-2xl border text-lg font-semibold tabular-nums transition-[background-color,border-color,color,transform] duration-200 active:scale-95",
-                checked ? "border-petrol bg-petrol text-ivory" : "border-petrol/15 bg-card text-petrol hover:border-petrol/40",
+                "h-12 rounded-xl border text-lg font-semibold tabular-nums transition-[background-color,border-color,color,transform] duration-200 active:scale-95",
+                checked ? "border-navy bg-navy text-cream" : "border-navy/15 bg-card text-navy hover:border-navy/40",
               )}
             >
               {n}
@@ -142,10 +142,10 @@ export function ScaleInput({
 }
 
 const inputBase =
-  "w-full rounded-2xl border border-petrol/15 bg-card px-4 text-base text-ink placeholder:text-ink/35 transition-[border-color,box-shadow] focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20 aria-invalid:border-destructive";
+  "w-full rounded-xl border border-navy/15 bg-card px-4 text-base text-ink placeholder:text-ink/35 transition-[border-color,box-shadow] focus:border-navy focus:outline-none focus:ring-4 focus:ring-blue/15 aria-invalid:border-destructive";
 
 export function TextInput(props: React.ComponentPropsWithoutRef<"input">) {
-  return <input {...props} className={cn(inputBase, "h-14", props.className)} />;
+  return <input {...props} className={cn(inputBase, "h-12", props.className)} />;
 }
 
 export function TextArea({
@@ -182,7 +182,7 @@ export function SuggestionChips({ items, onPick, current }: { items: readonly st
           onClick={() => onPick(t)}
           className={cn(
             "rounded-full border px-3.5 py-2 text-sm transition-colors",
-            current === t ? "border-terracotta bg-terracotta/15 text-ink" : "border-petrol/15 text-ink/70 hover:border-petrol/40",
+            current === t ? "border-blue bg-mist text-ink" : "border-navy/15 text-ink/70 hover:border-navy/40",
           )}
         >
           {t}
@@ -203,8 +203,8 @@ export function PrivacyHint({ text }: { text: string }) {
   const found = PII_PATTERNS.find((p) => p.re.test(text));
   if (!found) return null;
   return (
-    <p className="flex items-start gap-2 rounded-xl bg-terracotta/12 px-3.5 py-3 text-sm text-ink/80">
-      <TriangleAlert className="mt-0.5 size-4 shrink-0 text-terracotta-2" />
+    <p className="flex items-start gap-2 rounded-xl bg-mist px-3.5 py-3 text-sm text-ink/80">
+      <TriangleAlert className="mt-0.5 size-4 shrink-0 text-blue" />
       Parece que o texto contém {found.label}. Para proteger sua privacidade e a de outras pessoas, considere removê-lo.
     </p>
   );

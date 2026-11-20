@@ -4,21 +4,21 @@ import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export const actionButton = cva(
-  "group relative inline-flex select-none items-center whitespace-nowrap justify-center gap-2.5 overflow-hidden rounded-full font-semibold tracking-[-0.01em] transition-[background-color,color,box-shadow,transform] duration-300 ease-[var(--ease-out-expo)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-terracotta active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50",
+  "group relative inline-flex select-none items-center whitespace-nowrap justify-center gap-2.5 overflow-hidden rounded-full font-semibold transition-[background-color,color,border-color,transform] duration-200 ease-[var(--ease-out-expo)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--focus-ring)] active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        primary: "bg-petrol text-ivory hover:bg-charcoal",
-        light: "bg-ivory text-petrol hover:bg-white",
-        terracotta: "bg-terracotta text-ink hover:bg-[#df9d83]",
-        outline: "border border-current/25 text-current hover:border-current/60 hover:bg-current/5",
+        primary: "bg-navy text-white hover:bg-blue",
+        light: "bg-cream text-navy hover:bg-white",
+        accent: "bg-white text-navy hover:bg-sky",
+        outline: "border border-current/30 text-current hover:border-current/70",
         ghost: "text-current hover:bg-current/8",
       },
       size: {
         sm: "h-10 px-4 text-sm",
-        md: "h-12 px-6 text-[0.95rem]",
-        lg: "h-14 px-7 text-base",
-        xl: "h-16 px-8 text-[1.05rem]",
+        md: "h-11 px-5 text-[0.9375rem]",
+        lg: "h-12 px-6 text-[0.9375rem]",
+        xl: "h-14 px-7 text-base",
       },
     },
     defaultVariants: { variant: "primary", size: "md" },
@@ -34,8 +34,7 @@ function Content({ children, icon }: { children: ReactNode; icon?: ReactNode }) 
       <span className="relative inline-flex items-center gap-2">{children}</span>
       {icon ? (
         <span className="relative inline-flex size-5 items-center justify-center overflow-hidden" aria-hidden>
-          <span className="transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-[140%]">{icon}</span>
-          <span className="absolute -translate-x-[140%] transition-transform duration-500 ease-[var(--ease-out-expo)] group-hover:translate-x-0">{icon}</span>
+          <span className="transition-transform duration-300 ease-[var(--ease-out-quart)] group-hover:translate-x-0.5">{icon}</span>
         </span>
       ) : null}
     </>

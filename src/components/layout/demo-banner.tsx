@@ -19,7 +19,7 @@ export function DemoModeBanner({ forced }: { forced: boolean }) {
   return (
     <div
       role="status"
-      className="demo-banner fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-3 whitespace-nowrap rounded-full bg-sage py-2 pl-4 pr-2 text-sm text-charcoal shadow-lg"
+      className="demo-banner fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex max-w-[calc(100vw-2rem)] items-center gap-3 whitespace-nowrap rounded-full bg-sky py-2 pl-4 pr-2 text-sm text-navy shadow-lg"
     >
       <FlaskConical className="size-4 shrink-0" />
       <span className="leading-tight">
@@ -31,12 +31,12 @@ export function DemoModeBanner({ forced }: { forced: boolean }) {
           type="button"
           disabled={pending}
           onClick={() => start(() => setDemoMode(false))}
-          className="rounded-full bg-charcoal/10 px-3 py-1 text-xs font-semibold hover:bg-charcoal/20"
+          className="rounded-full bg-navy/10 px-3 py-1 text-xs font-semibold hover:bg-navy/20"
         >
           Desativar
         </button>
       )}
-      <button type="button" onClick={() => setHidden(true)} aria-label="Ocultar aviso" className="flex size-7 items-center justify-center rounded-full hover:bg-charcoal/10">
+      <button type="button" onClick={() => setHidden(true)} aria-label="Ocultar aviso" className="flex size-7 items-center justify-center rounded-full hover:bg-navy/10">
         <X className="size-3.5" />
       </button>
     </div>

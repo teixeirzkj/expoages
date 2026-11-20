@@ -1,6 +1,9 @@
 import type {
   ActionPlan,
   ActionStatus,
+  CourseEnrollment,
+  EnrollmentFilters,
+  EnrollmentStatus,
   FeedbackRecord,
   OuvidoriaRecord,
   PulseResponse,
@@ -12,7 +15,7 @@ import type {
   TrackResult,
 } from "@/lib/domain";
 export type RecordByKind = { ouvidoria: OuvidoriaRecord; feedback: FeedbackRecord };
-import type { ActionInput, FeedbackInput, OuvidoriaInput, PulseInput } from "@/lib/validation";
+import type { ActionInput, EnrollmentInput, FeedbackInput, OuvidoriaInput, PulseInput } from "@/lib/validation";
 
 export interface ProtocolData {
   reference: string;
@@ -32,6 +35,7 @@ export interface Repository {
   insertOuvidoria(input: Omit<OuvidoriaInput, "confirm">, protocol: ProtocolData): Promise<void>;
   insertFeedback(input: FeedbackInput, protocol: ProtocolData): Promise<void>;
   insertPulse(input: PulseInput): Promise<void>;
+  insertEnrollment(input: Omit<EnrollmentInput, "consent">): Promise<void>;
   track(reference: string, secretHash: string): Promise<TrackResult | null>;
 
   // Administrativo
@@ -46,6 +50,9 @@ export interface Repository {
   createAction(input: ActionInput): Promise<void>;
   updateActionStatus(id: string, status: ActionStatus): Promise<void>;
   deleteAction(id: string): Promise<void>;
+  listEnrollments(filters?: EnrollmentFilters): Promise<CourseEnrollment[]>;
+  updateEnrollmentStatus(id: string, status: EnrollmentStatus): Promise<void>;
+  deleteEnrollment(id: string): Promise<void>;
 }
 
 export class RepositoryError extends Error {

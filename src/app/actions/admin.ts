@@ -8,6 +8,7 @@ import { getRepository, RepositoryError, type Repository } from "@/lib/server/re
 import {
   actionSchema,
   actionStatusSchema,
+  enrollmentStatusSchema,
   fieldErrors,
   firstError,
   kindSchema,
@@ -100,4 +101,20 @@ export async function deleteActionPlan(mode: DataMode, raw: unknown): Promise<Ad
   const parsed = z.object({ id: uuidLike }).safeParse(raw);
   if (!parsed.success) return { ok: false, error: "Requisição inválida." };
   return run(() => repo.deleteAction(parsed.data.id));
+}
+
+export async function updateEnrollmentStatus(mode: DataMode, raw: unknown): Promise<AdminResult> {
+  const repo = await authorized(mode);
+  if (isResult(repo)) return repo;
+  const parsed = z.object({ id: uuidLike, status: enrollmentStatusSchema }).safeParse(raw);
+  if (!parsed.success) return { ok: false, error: "Status inválido." };
+  return run(() => repo.updateEnrollmentStatus(parsed.data.id, parsed.data.status));
+}
+
+export async function deleteEnrollment(mode: DataMode, raw: unknown): Promise<AdminResult> {
+  const repo = await authorized(mode);
+  if (isResult(repo)) return repo;
+  const parsed = z.object({ id: uuidLike }).safeParse(raw);
+  if (!parsed.success) return { ok: false, error: "Requisição inválida." };
+  return run(() => repo.deleteEnrollment(parsed.data.id));
 }

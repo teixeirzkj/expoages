@@ -14,6 +14,7 @@ export function SubmissionSuccess({
   message,
   onTrack,
   onClose,
+  closeLabel = "Fechar",
 }: {
   protocol: string;
   mode: DataMode;
@@ -21,6 +22,7 @@ export function SubmissionSuccess({
   message: string;
   onTrack: (protocol: string) => void;
   onClose: () => void;
+  closeLabel?: string;
 }) {
   const [copied, setCopied] = useState(false);
 
@@ -43,8 +45,8 @@ export function SubmissionSuccess({
         transition={{ type: "spring", stiffness: 260, damping: 20 }}
         className="relative mx-auto flex size-20 items-center justify-center"
       >
-        <span className="absolute inset-0 rounded-full bg-sage/40 motion-safe:animate-[ripple_1.8s_ease-out_infinite]" />
-        <span className="relative flex size-16 items-center justify-center rounded-full bg-petrol text-ivory">
+        <span className="absolute inset-0 rounded-full bg-sky motion-safe:animate-[pulse-ring_1.4s_ease-out_2_both]" />
+        <span className="relative flex size-16 items-center justify-center rounded-full bg-navy text-cream">
           <svg viewBox="0 0 24 24" className="size-8" aria-hidden>
             <motion.path
               d="M5 12.5l4.2 4.2L19 7"
@@ -61,19 +63,19 @@ export function SubmissionSuccess({
         </span>
       </motion.div>
 
-      <h3 className="display-md mt-6 text-petrol">{title}</h3>
+      <h3 className="display-md mt-6 text-navy">{title}</h3>
       <p className="mx-auto mt-3 max-w-md text-ink/65">{message}</p>
 
-      <div className="mx-auto mt-8 max-w-md rounded-3xl border border-dashed border-petrol/30 bg-ivory p-6">
+      <div className="mx-auto mt-8 max-w-md rounded-2xl border border-dashed border-navy/30 bg-cream p-6">
         <p className="eyebrow text-ink/50">Seu protocolo</p>
-        <p className="mt-3 break-all font-mono text-[clamp(1.15rem,4.5vw,1.6rem)] font-semibold tracking-wider text-petrol" translate="no">
+        <p className="mt-3 break-all font-mono text-[clamp(1.05rem,4vw,1.4rem)] font-semibold tracking-wider text-navy" translate="no">
           {protocol}
         </p>
         <p className="mt-3 text-xs text-ink/55">
           Guarde este código: ele é a única forma de acompanhar o retorno. Não é possível recuperá-lo depois.
         </p>
         <div className="mt-5 flex flex-wrap justify-center gap-2">
-          <ActionButton size="sm" variant="outline" className="text-petrol" onClick={copy} icon={copied ? <Check className="size-4" /> : <Copy className="size-4" />}>
+          <ActionButton size="sm" variant="outline" className="text-navy" onClick={copy} icon={copied ? <Check className="size-4" /> : <Copy className="size-4" />}>
             {copied ? "Copiado" : "Copiar protocolo"}
           </ActionButton>
           <ActionButton size="sm" onClick={() => onTrack(protocol)} icon={<Search className="size-4" />}>
@@ -83,13 +85,13 @@ export function SubmissionSuccess({
       </div>
 
       {mode === "demo" && (
-        <p className="mx-auto mt-5 max-w-md rounded-xl bg-sage-2 px-4 py-2.5 text-xs text-petrol">
+        <p className="mx-auto mt-5 max-w-md rounded-xl bg-mist px-4 py-2.5 text-xs text-navy">
           Modo demonstração: este envio foi registrado apenas no ambiente fictício da apresentação.
         </p>
       )}
 
       <button type="button" onClick={onClose} className="mt-6 text-sm font-medium text-ink/60 underline-offset-4 hover:underline">
-        Fechar
+        {closeLabel}
       </button>
     </div>
   );

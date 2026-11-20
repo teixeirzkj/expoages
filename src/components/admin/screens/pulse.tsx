@@ -24,7 +24,7 @@ export async function PulseScreen({ mode, searchParams }: { mode: DataMode; sear
       />
       <PeriodFilter action={base} from={period.from} to={period.to} />
 
-      <div className="mb-6 flex items-start gap-3 rounded-2xl bg-sage-2/60 p-4 text-sm text-petrol">
+      <div className="mb-6 flex items-start gap-3 rounded-2xl bg-mist/60 p-4 text-sm text-navy">
         <ShieldCheck className="mt-0.5 size-5 shrink-0" />
         <p>
           Indicadores só aparecem com pelo menos {summary.minSample} respostas no período, e cada ponto da evolução temporal
@@ -40,7 +40,7 @@ export async function PulseScreen({ mode, searchParams }: { mode: DataMode; sear
         />
       ) : (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {summary.dimensions.map((d, i) => (
               <MetricCard
                 key={d.key}

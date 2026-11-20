@@ -39,7 +39,7 @@ export function StatusControl({ mode, kind, id, status }: { mode: DataMode; kind
             onClick={() => change(s)}
             className={cn(
               "relative min-h-14 rounded-2xl border px-3 py-2 text-left text-sm font-medium transition-colors disabled:cursor-wait",
-              active ? "border-petrol bg-petrol text-ivory" : done ? "border-petrol/30 bg-sage-2/60 text-petrol" : "border-petrol/12 text-ink/65 hover:border-petrol/35",
+              active ? "border-navy bg-navy text-cream" : done ? "border-navy/30 bg-mist/60 text-navy" : "border-navy/12 text-ink/65 hover:border-navy/35",
             )}
           >
             <span className="block text-[0.7rem] font-semibold opacity-60">Etapa {i + 1}</span>
@@ -85,7 +85,7 @@ function TextComposer({
           } else toast.error(res.error ?? "Não foi possível salvar.");
         });
       }}
-      className={cn("rounded-2xl p-4", tone === "note" ? "bg-ivory-2/70" : "bg-sage-2/60")}
+      className={cn("rounded-2xl p-4", tone === "note" ? "bg-cream-2/70" : "bg-mist/60")}
     >
       <label className="flex items-center gap-2 text-sm font-semibold text-ink">
         {icon}
@@ -98,14 +98,14 @@ function TextComposer({
         maxLength={max}
         rows={3}
         placeholder={placeholder}
-        className="mt-3 w-full resize-y rounded-xl border border-petrol/15 bg-card px-3 py-2.5 text-base focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20"
+        className="mt-3 w-full resize-y rounded-xl border border-navy/15 bg-card px-3 py-2.5 text-base focus:border-navy focus:outline-none focus:ring-4 focus:ring-sky/20"
       />
       <div className="mt-2 flex items-center justify-between">
         <span className="text-xs tabular-nums text-ink/40">{body.length}/{max}</span>
         <button
           type="submit"
           disabled={pending || body.trim().length < 2}
-          className="inline-flex h-10 items-center gap-2 rounded-full bg-petrol px-4 text-sm font-semibold text-ivory disabled:opacity-40"
+          className="inline-flex h-10 items-center gap-2 rounded-full bg-navy px-4 text-sm font-semibold text-cream disabled:opacity-40"
         >
           {pending && <LoaderCircle className="size-4 animate-spin" />}
           {submitLabel}
@@ -123,7 +123,7 @@ export function NoteComposer({ mode, kind, id }: { mode: DataMode; kind: Submiss
       hint="Visível somente para a gestão. Nunca é exibida a quem enviou."
       placeholder="Ex.: tema recorrente, encaminhado à coordenação…"
       submitLabel="Salvar observação"
-      icon={<NotebookPen className="size-4 text-petrol/70" />}
+      icon={<NotebookPen className="size-4 text-navy/70" />}
       onSubmit={(body) => addInternalNote(mode, { kind, id, body })}
     />
   );
@@ -137,7 +137,7 @@ export function ResponseComposer({ mode, kind, id }: { mode: DataMode; kind: Sub
       hint="Quem enviou poderá ler esta resposta ao consultar o protocolo. Escreva de forma respeitosa e sem expor pessoas."
       placeholder="Ex.: Obrigado pela contribuição. A situação foi analisada e…"
       submitLabel="Enviar resposta"
-      icon={<MessageSquareText className="size-4 text-petrol/70" />}
+      icon={<MessageSquareText className="size-4 text-navy/70" />}
       onSubmit={(body) => addPublicResponse(mode, { kind, id, body })}
     />
   );

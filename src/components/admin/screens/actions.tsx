@@ -22,7 +22,7 @@ export async function ActionsScreen({ mode }: { mode: DataMode }) {
           <>
             <a
               href={`/api/export?tipo=acoes&modo=${mode}`}
-              className="inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-petrol ring-1 ring-petrol/15 hover:bg-ivory-2"
+              className="inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-navy ring-1 ring-navy/15 hover:bg-cream-2"
             >
               <Download className="size-4" /> CSV
             </a>
@@ -30,7 +30,7 @@ export async function ActionsScreen({ mode }: { mode: DataMode }) {
           </>
         }
       />
-      <div className="mb-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard tone="dark" label="Ações no plano" value={t.total} />
         <MetricCard label="Planejadas" value={t.planejada} />
         <MetricCard label="Em andamento" value={t.em_andamento} />

@@ -77,11 +77,11 @@ export async function FeedbackListScreen({ mode, searchParams }: { mode: DataMod
               aria-current={active ? "page" : undefined}
               className={cn(
                 "flex h-10 shrink-0 items-center gap-2 rounded-full px-4 text-sm font-medium transition-colors",
-                active ? "bg-petrol text-ivory" : "bg-card text-ink/70 ring-1 ring-petrol/10 hover:bg-ivory-2",
+                active ? "bg-navy text-cream" : "bg-card text-ink/70 ring-1 ring-navy/10 hover:bg-cream-2",
               )}
             >
               {t.label}
-              <span className={cn("rounded-full px-1.5 text-xs tabular-nums", active ? "bg-ivory/15" : "bg-ivory-2")}>{count}</span>
+              <span className={cn("rounded-full px-1.5 text-xs tabular-nums", active ? "bg-cream/15" : "bg-cream-2")}>{count}</span>
             </Link>
           );
         })}
@@ -135,16 +135,16 @@ export async function SubmissionDetailScreen({
         <div className="space-y-6 xl:col-span-3">
           <Panel>
             <div className="flex flex-wrap items-center gap-3">
-              <span className="rounded-full bg-ivory-2 px-3 py-1 font-mono text-xs font-semibold text-petrol">{record.reference}</span>
+              <span className="rounded-full bg-cream-2 px-3 py-1 font-mono text-xs font-semibold text-navy">{record.reference}</span>
               <StatusBadge status={record.status} />
               <span className="text-xs text-ink/50">{label}</span>
             </div>
-            <h1 className="mt-5 font-display text-[clamp(1.7rem,3vw,2.3rem)] leading-tight text-petrol">{record.topic}</h1>
+            <h1 className="mt-5 font-display text-[clamp(1.7rem,3vw,2.3rem)] leading-tight text-navy">{record.topic}</h1>
             <p className="mt-1 flex items-center gap-1.5 text-sm text-ink/50">
               <Clock3 className="size-4" /> Recebido em {formatDateTime(record.createdAt)}
             </p>
             <p className="mt-6 whitespace-pre-line text-[1.05rem] leading-relaxed text-ink/85">{body}</p>
-            <dl className="mt-8 grid gap-4 border-t border-petrol/8 pt-5 text-sm sm:grid-cols-3">
+            <dl className="mt-8 grid gap-4 border-t border-navy/8 pt-5 text-sm sm:grid-cols-3">
               <div>
                 <dt className="text-ink/50">{record.kind === "ouvidoria" ? "Impacto informado" : "Avaliação"}</dt>
                 <dd className="mt-1 font-semibold">{score ? `${score} de 5` : "Não informado"}</dd>
@@ -171,7 +171,7 @@ export async function SubmissionDetailScreen({
               <ResponseComposer mode={mode} kind={kind} id={record.id} />
               <NoteComposer mode={mode} kind={kind} id={record.id} />
             </div>
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-petrol/20 p-4">
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-navy/20 p-4">
               <p className="text-sm text-ink/65">Esta contribuição pede uma providência? Leve-a para o plano de ações.</p>
               <ActionFormDialog
                 mode={mode}
@@ -183,7 +183,7 @@ export async function SubmissionDetailScreen({
         </div>
 
         <Panel title="Histórico" description="Mudanças de status, respostas e observações." className="h-fit xl:col-span-2">
-          <ol className="relative space-y-5 before:absolute before:bottom-2 before:left-[0.95rem] before:top-2 before:w-px before:bg-petrol/12">
+          <ol className="relative space-y-5 before:absolute before:bottom-2 before:left-[0.95rem] before:top-2 before:w-px before:bg-navy/12">
             {timeline.map((t) => {
               const Icon = ICONS[t.type];
               return (
@@ -191,7 +191,7 @@ export async function SubmissionDetailScreen({
                   <span
                     className={cn(
                       "relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full ring-4 ring-card",
-                      t.type === "response" ? "bg-sage text-charcoal" : t.type === "note" ? "bg-ivory-2 text-petrol" : "bg-petrol text-ivory",
+                      t.type === "response" ? "bg-sky text-navy" : t.type === "note" ? "bg-cream-2 text-navy" : "bg-navy text-cream",
                     )}
                   >
                     <Icon className="size-3.5" />
@@ -210,7 +210,7 @@ export async function SubmissionDetailScreen({
               );
             })}
             <li className="relative flex gap-4">
-              <span className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-terracotta text-ink ring-4 ring-card">
+              <span className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full bg-sky text-navy ring-4 ring-card">
                 <span className="size-2 rounded-full bg-ink" />
               </span>
               <div className="pt-1">

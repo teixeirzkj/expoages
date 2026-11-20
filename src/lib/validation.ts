@@ -4,13 +4,16 @@ import {
   ACTION_PRIORITIES,
   ACTION_STATUSES,
   AREAS,
+  COURSE_SHIFTS,
+  COURSES,
+  ENROLLMENT_STATUSES,
   FEEDBACK_KINDS,
   LIMITS,
   OUVIDORIA_CATEGORIES,
   SUBMISSION_STATUSES,
 } from "./domain";
 
-function keysOf<T extends Record<string, string>>(obj: T) {
+function keysOf<T extends Record<string, unknown>>(obj: T) {
   return Object.keys(obj) as [keyof T & string, ...(keyof T & string)[]];
 }
 
@@ -75,6 +78,24 @@ export const pulseSchema = z.object({
   feedback: scale,
 });
 export type PulseInput = z.infer<typeof pulseSchema>;
+
+/** Inscrição em curso: dados mínimos para contato, com consentimento explícito. */
+export const enrollmentSchema = z.object({
+  fullName: text(3, 80, "seu nome").pipe(z.string().regex(/^[\p{L}\p{M}' .-]+$/u, "Use apenas letras no nome.")),
+  email: z
+    .string({ error: "Informe seu e-mail." })
+    .trim()
+    .toLowerCase()
+    .pipe(z.email("Informe um e-mail válido.").max(120, "E-mail muito longo.")),
+  course: z.enum(keysOf(COURSES), { error: "Escolha um curso." }),
+  shift: z.enum(keysOf(COURSE_SHIFTS), { error: "Escolha um turno." }),
+  area: z
+    .union([z.enum(AREAS), z.literal(""), z.null(), z.undefined()])
+    .transform((v) => (v ? v : null)),
+  consent: z.literal(true, { error: "É preciso concordar com o uso dos dados para a inscrição." }),
+});
+export type EnrollmentInput = z.infer<typeof enrollmentSchema>;
+export const enrollmentStatusSchema = z.enum(keysOf(ENROLLMENT_STATUSES));
 
 /** Protocolo completo: HZ-XXXX-XXXX-XXXX-XXXX (alfabeto Crockford). */
 export const protocolSchema = z

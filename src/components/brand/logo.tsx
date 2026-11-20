@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
  * (coloque o arquivo em /public).
  */
 export function Logo({ className, tone = "dark" }: { className?: string; tone?: "dark" | "light" }) {
-  const color = tone === "dark" ? "text-petrol" : "text-ivory";
+  const color = tone === "dark" ? "text-navy" : "text-cream";
   if (siteConfig.logoSrc) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
@@ -20,9 +20,9 @@ export function Logo({ className, tone = "dark" }: { className?: string; tone?: 
         <circle cx="20" cy="20" r="18.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
         <path d="M7 24.5h26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         <path d="M11 24.5a9 9 0 0 1 18 0" fill="none" stroke="currentColor" strokeWidth="1.5" />
-        <circle cx="20" cy="15" r="2.6" className="fill-terracotta" />
+        <circle cx="20" cy="15" r="2.6" className={tone === "dark" ? "fill-blue" : "fill-sky"} />
       </svg>
-      <span className="font-display text-[1.35rem] leading-none tracking-tight" style={{ fontVariationSettings: '"opsz" 72' }}>
+      <span className="font-display text-[1.25rem] font-semibold leading-none tracking-[-0.01em]">
         {siteConfig.platformName}
       </span>
     </span>

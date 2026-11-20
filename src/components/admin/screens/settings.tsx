@@ -14,12 +14,12 @@ async function listAdmins(): Promise<{ name: string; since: string }[]> {
 }
 
 const SWATCHES = [
-  ["--brand-petrol", "Verde-petróleo"],
-  ["--brand-charcoal", "Azul-carvão"],
-  ["--brand-ivory", "Marfim"],
-  ["--brand-sage", "Verde-sálvia"],
-  ["--brand-terracotta", "Terracota"],
-  ["--brand-stone", "Cinza quente"],
+  ["--brand-navy", "Azul-marinho"],
+  ["--brand-blue", "Azul secundário"],
+  ["--brand-cream", "Branco-creme"],
+  ["--brand-mist", "Cinza claro"],
+  ["--brand-slate", "Texto secundário"],
+  ["--brand-sky", "Azul claro"],
 ];
 
 export async function SettingsScreen({ mode }: { mode: DataMode }) {
@@ -39,7 +39,7 @@ export async function SettingsScreen({ mode }: { mode: DataMode }) {
           <ul className="grid grid-cols-3 gap-3 sm:grid-cols-6">
             {SWATCHES.map(([v, label]) => (
               <li key={v} className="text-center">
-                <span className="mx-auto block size-12 rounded-2xl ring-1 ring-petrol/10" style={{ background: `var(${v})` }} />
+                <span className="mx-auto block size-12 rounded-2xl ring-1 ring-navy/10" style={{ background: `var(${v})` }} />
                 <span className="mt-2 block text-[0.7rem] text-ink/60">{label}</span>
               </li>
             ))}
@@ -60,7 +60,7 @@ export async function SettingsScreen({ mode }: { mode: DataMode }) {
               ["Integrantes", a.members.length ? a.members.join(", ") : "A definir"],
               ["Evento", [a.event, a.year].filter(Boolean).join(" · ") || "A definir"],
             ].map(([k, v]) => (
-              <div key={k} className="flex justify-between gap-4 border-b border-petrol/5 pb-2">
+              <div key={k} className="flex justify-between gap-4 border-b border-navy/5 pb-2">
                 <dt className="text-ink/55">{k}</dt>
                 <dd className="text-right font-medium">{v}</dd>
               </div>
@@ -75,7 +75,7 @@ export async function SettingsScreen({ mode }: { mode: DataMode }) {
           {mode === "demo" ? (
             <p className="text-sm text-ink/60">No modo demonstração não há contas: o painel é aberto e contém apenas dados fictícios.</p>
           ) : admins.length ? (
-            <ul className="divide-y divide-petrol/8 text-sm">
+            <ul className="divide-y divide-navy/8 text-sm">
               {admins.map((ad) => (
                 <li key={ad.since + ad.name} className="flex justify-between py-2.5">
                   <span className="font-medium">{ad.name}</span>

@@ -1,68 +1,53 @@
 "use client";
 
-import { useRef, type ElementType, type ReactNode, type ComponentPropsWithoutRef } from "react";
-import { gsap, MOTION_OK, useGSAP } from "@/lib/gsap";
+import { useEffect, useRef, type ComponentPropsWithoutRef, type ElementType, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 type RevealProps<T extends ElementType> = {
   as?: T;
   children: ReactNode;
   className?: string;
-  /** Intervalo entre filhos marcados com data-reveal (stagger). */
-  stagger?: number;
-  y?: number;
-  delay?: number;
-  /** "fade" (deslocamento + opacidade) ou "clip" (máscara de baixo para cima). */
-  variant?: "fade" | "clip";
 } & Omit<ComponentPropsWithoutRef<T>, "as" | "children" | "className">;
 
+/* Um único IntersectionObserver para a página inteira: nenhum listener de
+   scroll, nenhum estado React — apenas atributos e transições CSS (opacity +
+   transform, que rodam no compositor). */
+let observer: IntersectionObserver | null = null;
+function getObserver() {
+  if (!observer) {
+    observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          (entry.target as HTMLElement).dataset.shown = "";
+          observer!.unobserve(entry.target);
+        }
+      },
+      { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+    );
+  }
+  return observer;
+}
+
 /**
- * SectionReveal: anima a entrada dos elementos com data-reveal quando a
- * seção entra na viewport. Sem JavaScript, ou com movimento reduzido, o
- * conteúdo aparece normalmente (o estado inicial é aplicado apenas pelo GSAP).
+ * Revela o bloco (ou seus filhos com `data-reveal`, em sequência curta) quando
+ * ele entra na viewport. Só "arma" elementos abaixo da dobra: o que já está
+ * visível não pisca, e sem JavaScript ou com movimento reduzido tudo aparece.
  */
-export function Reveal<T extends ElementType = "div">({
-  as,
-  children,
-  className,
-  stagger = 0.09,
-  y = 28,
-  delay = 0,
-  variant = "fade",
-  ...rest
-}: RevealProps<T>) {
+export function Reveal<T extends ElementType = "div">({ as, children, className, ...rest }: RevealProps<T>) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-      mm.add(MOTION_OK, () => {
-        const root = ref.current!;
-        const items = root.querySelectorAll<HTMLElement>("[data-reveal]");
-        const targets = items.length ? items : [root];
-        const from =
-          variant === "clip"
-            ? { clipPath: "inset(100% 0% 0% 0%)", y: 12 }
-            : { opacity: 0, y };
-        const to =
-          variant === "clip"
-            ? { clipPath: "inset(0% 0% 0% 0%)", y: 0 }
-            : { opacity: 1, y: 0 };
-        gsap.fromTo(targets, from, {
-          ...to,
-          duration: variant === "clip" ? 1.1 : 0.95,
-          ease: "expo.out",
-          stagger,
-          delay,
-          clearProps: "transform,clipPath",
-          scrollTrigger: { trigger: root, start: "top 82%", once: true },
-        });
-      });
-      return () => mm.revert();
-    },
-    { scope: ref },
-  );
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (el.getBoundingClientRect().top < window.innerHeight * 0.92) return;
+    el.querySelectorAll<HTMLElement>("[data-reveal]").forEach((child, i) => child.style.setProperty("--i", String(Math.min(i, 6))));
+    el.dataset.armed = "";
+    const io = getObserver();
+    io.observe(el);
+    return () => io.unobserve(el);
+  }, []);
 
   return (
     <Tag ref={ref} className={cn(className)} {...rest}>

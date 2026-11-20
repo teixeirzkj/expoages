@@ -7,93 +7,92 @@
 /* ==========================================================================
    DESIGN TOKENS — Projeto Horizonte
    --------------------------------------------------------------------------
-   Toda a identidade visual vive aqui. Para aplicar a identidade oficial do
-   grupo, troque os valores da seção "Paleta da marca" (e, se necessário,
-   as fontes em src/config/fonts.ts). Componentes usam apenas estes tokens.
+   Toda a identidade visual vive aqui. Componentes usam apenas estes tokens
+   (classes como bg-navy, text-cream, border-mist). Para ajustar a marca,
+   altere somente os valores da seção "Paleta da marca".
    ========================================================================== */
 :root {
-  /* Paleta da marca (provisória) */
-  --brand-petrol: #173a3c;      /* verde-petróleo profundo */
-  --brand-petrol-2: #1f4a4c;    /* variação para superfícies escuras */
-  --brand-charcoal: #14242b;    /* azul-carvão */
-  --brand-ivory: #f7f5f0;       /* marfim */
-  --brand-ivory-2: #efebe2;     /* marfim sombreado */
-  --brand-sage: #b8c7b0;        /* verde-sálvia */
-  --brand-sage-2: #dfe6da;      /* sálvia clara */
-  --brand-terracotta: #d58e72;  /* terracota suave */
-  --brand-terracotta-2: #b96d52;/* terracota para texto (contraste AA) */
-  --brand-stone: #727873;       /* cinza quente */
-  --brand-ink: #10191c;         /* texto principal */
+  /* Paleta da marca — azul-marinho e branco-creme */
+  --brand-navy: #131936;     /* azul-marinho: cor principal */
+  --brand-navy-2: #1f2851;   /* superfície elevada sobre o marinho / hover */
+  --brand-blue: #34446b;     /* azul secundário: destaques e texto de ênfase */
+  --brand-cream: #f6f3e8;    /* branco-creme: fundo claro */
+  --brand-cream-2: #ece8da;  /* creme sombreado: separação sutil */
+  --brand-white: #ffffff;    /* branco puro: formulários e superfícies */
+  --brand-mist: #e9eaf0;     /* cinza claro azulado */
+  --brand-slate: #626779;    /* texto secundário (AA sobre creme e branco) */
+  --brand-sky: #c3cdeb;      /* azul claro: destaque sobre fundos escuros */
+  --brand-ink: #131936;      /* texto principal */
 
   /* Raios e ritmo */
-  --radius: 0.875rem;
-  --radius-card: 1.5rem;
-  --section-y: clamp(5rem, 11vw, 10rem);
-  --gutter: clamp(1.25rem, 4vw, 3.5rem);
-  --header-h: 4.5rem;
+  --radius: 0.75rem;
+  --radius-card: 1.25rem;
+  --section-y: clamp(3.5rem, 8vw, 6.5rem);
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --header-h: 4rem;
+  --focus-ring: var(--brand-blue);
 
   /* Movimento */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 
   /* Mapeamento para os tokens do shadcn/ui */
-  --background: var(--brand-ivory);
+  --background: var(--brand-cream);
   --foreground: var(--brand-ink);
-  --card: #fffdf8;
+  --card: var(--brand-white);
   --card-foreground: var(--brand-ink);
-  --popover: #fffdf8;
+  --popover: var(--brand-white);
   --popover-foreground: var(--brand-ink);
-  --primary: var(--brand-petrol);
-  --primary-foreground: var(--brand-ivory);
-  --secondary: var(--brand-sage-2);
-  --secondary-foreground: var(--brand-petrol);
-  --muted: var(--brand-ivory-2);
-  --muted-foreground: #5d635f;
-  --accent: var(--brand-sage-2);
-  --accent-foreground: var(--brand-petrol);
-  --destructive: #b4432f;
-  --border: color-mix(in oklab, var(--brand-petrol) 14%, transparent);
-  --input: color-mix(in oklab, var(--brand-petrol) 22%, transparent);
-  --ring: var(--brand-terracotta);
+  --primary: var(--brand-navy);
+  --primary-foreground: var(--brand-white);
+  --secondary: var(--brand-mist);
+  --secondary-foreground: var(--brand-navy);
+  --muted: var(--brand-cream-2);
+  --muted-foreground: var(--brand-slate);
+  --accent: var(--brand-mist);
+  --accent-foreground: var(--brand-navy);
+  --destructive: #b3261e;
+  --border: color-mix(in oklab, var(--brand-navy) 12%, transparent);
+  --input: color-mix(in oklab, var(--brand-navy) 22%, transparent);
+  --ring: var(--brand-blue);
 
-  /* Paleta de dados: derivada da marca, validada para daltonismo e contraste
-     (scripts de validação do skill dataviz). Ordem fixa — nunca reordenar. */
-  --chart-1: #009399; /* verde-azulado */
-  --chart-2: #d0663e; /* terracota */
-  --chart-3: #5e68c4; /* índigo */
+  /* Paleta de dados: validada para daltonismo e contraste sobre branco e
+     creme (validador do skill dataviz). Ordem fixa — nunca reordenar. */
+  --chart-1: #3f5bbf; /* azul */
+  --chart-2: #d0663e; /* laranja queimado */
+  --chart-3: #009399; /* verde-azulado */
   --chart-4: #9c8a12; /* ocre */
-  --chart-5: var(--brand-stone);
-  --chart-grid: color-mix(in oklab, var(--brand-petrol) 10%, transparent);
-  --chart-axis: #6b716d;
+  --chart-5: var(--brand-slate);
+  --chart-grid: color-mix(in oklab, var(--brand-navy) 9%, transparent);
+  --chart-axis: var(--brand-slate);
 
-  --sidebar: var(--brand-charcoal);
-  --sidebar-foreground: var(--brand-ivory);
-  --sidebar-primary: var(--brand-sage);
-  --sidebar-primary-foreground: var(--brand-charcoal);
-  --sidebar-accent: color-mix(in oklab, var(--brand-ivory) 8%, transparent);
-  --sidebar-accent-foreground: var(--brand-ivory);
-  --sidebar-border: color-mix(in oklab, var(--brand-ivory) 10%, transparent);
-  --sidebar-ring: var(--brand-terracotta);
+  --sidebar: var(--brand-navy);
+  --sidebar-foreground: var(--brand-cream);
+  --sidebar-primary: var(--brand-sky);
+  --sidebar-primary-foreground: var(--brand-navy);
+  --sidebar-accent: color-mix(in oklab, var(--brand-cream) 8%, transparent);
+  --sidebar-accent-foreground: var(--brand-cream);
+  --sidebar-border: color-mix(in oklab, var(--brand-cream) 10%, transparent);
+  --sidebar-ring: var(--brand-sky);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
-  --font-heading: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-plex), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-plex), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, monospace;
 
-  --color-petrol: var(--brand-petrol);
-  --color-petrol-2: var(--brand-petrol-2);
-  --color-charcoal: var(--brand-charcoal);
-  --color-ivory: var(--brand-ivory);
-  --color-ivory-2: var(--brand-ivory-2);
-  --color-sage: var(--brand-sage);
-  --color-sage-2: var(--brand-sage-2);
-  --color-terracotta: var(--brand-terracotta);
-  --color-terracotta-2: var(--brand-terracotta-2);
-  --color-stone: var(--brand-stone);
+  --color-navy: var(--brand-navy);
+  --color-navy-2: var(--brand-navy-2);
+  --color-blue: var(--brand-blue);
+  --color-cream: var(--brand-cream);
+  --color-cream-2: var(--brand-cream-2);
+  --color-white: var(--brand-white);
+  --color-mist: var(--brand-mist);
+  --color-slate: var(--brand-slate);
+  --color-sky: var(--brand-sky);
   --color-ink: var(--brand-ink);
 
   --color-sidebar-ring: var(--sidebar-ring);
@@ -134,35 +133,24 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  --animate-hero-line: hero-line 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-fade-up: fade-up 1s cubic-bezier(0.16, 1, 0.3, 1) both;
-  --animate-breathe: breathe 9s ease-in-out infinite;
-  --animate-orbit: orbit 40s linear infinite;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-panel-in: panel-in 0.35s cubic-bezier(0.25, 1, 0.5, 1) both;
 }
 
-@keyframes hero-line {
-  from { transform: translate3d(0, 105%, 0) rotate(2deg); }
-  to { transform: translate3d(0, 0, 0) rotate(0); }
-}
 @keyframes fade-up {
-  from { opacity: 0; transform: translate3d(0, 18px, 0); }
-  to { opacity: 1; transform: translate3d(0, 0, 0); }
+  from { opacity: 0; transform: translate3d(0, 12px, 0); }
+  to { opacity: 1; transform: none; }
 }
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.035); }
+@keyframes panel-in {
+  from { opacity: 0; transform: translate3d(0, 8px, 0); }
+  to { opacity: 1; transform: none; }
 }
-@keyframes orbit {
-  to { transform: rotate(360deg); }
+@keyframes draw {
+  to { stroke-dashoffset: 0; }
 }
-@keyframes scrollcue {
-  0% { transform: translateY(-100%); }
-  60%, 100% { transform: translateY(200%); }
-}
-@keyframes ripple {
-  from { transform: scale(0.6); opacity: 0.55; }
-  to { transform: scale(1.4); opacity: 0; }
+@keyframes pulse-ring {
+  0% { transform: scale(0.85); opacity: 0.5; }
+  100% { transform: scale(1.25); opacity: 0; }
 }
 
 @layer base {
@@ -172,88 +160,128 @@
   html {
     @apply font-sans;
     -webkit-text-size-adjust: 100%;
-    scroll-padding-top: calc(var(--header-h) + 1rem);
+    scroll-padding-top: calc(var(--header-h) + 0.75rem);
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "ss01", "cv11";
-    text-rendering: optimizeLegibility;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-feature-settings: "cv11", "ss03";
   }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+  p { text-wrap: pretty; }
   ::selection {
-    background: var(--brand-terracotta);
-    color: var(--brand-ink);
+    background: var(--brand-sky);
+    color: var(--brand-navy);
   }
   :focus-visible {
-    outline: 2px solid var(--brand-terracotta);
+    outline: 2px solid var(--focus-ring);
     outline-offset: 3px;
   }
   button, [role="button"], a { -webkit-tap-highlight-color: transparent; }
+  button { touch-action: manipulation; }
 }
-
-/* Lenis (scroll suave somente no desktop) */
-html.lenis, html.lenis body { height: auto; }
-.lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
-.lenis [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-smooth iframe { pointer-events: none; }
 
 @layer components {
   .container-editorial {
     width: 100%;
-    max-width: 88rem;
+    max-width: 75rem; /* 1200px */
     margin-inline: auto;
     padding-inline: var(--gutter);
   }
   .section-y { padding-block: var(--section-y); }
 
-  .display-xl {
+  /* Superfícies escuras: anel de foco claro para manter o contraste. */
+  .surface-dark { --focus-ring: var(--brand-sky); }
+
+  /* Escala tipográfica (celular → desktop) */
+  .display-xl { /* hero: 31px → 64px */
     font-family: var(--font-display);
-    font-size: clamp(2.75rem, 7.4vw, 7.25rem);
-    line-height: 0.98;
-    letter-spacing: -0.035em;
-    font-variation-settings: "opsz" 144, "SOFT" 50;
-    font-weight: 380;
-  }
-  .display-lg {
-    font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5vw, 4.75rem);
-    line-height: 1.02;
-    letter-spacing: -0.03em;
-    font-variation-settings: "opsz" 144, "SOFT" 30;
-    font-weight: 380;
-  }
-  .display-md {
-    font-family: var(--font-display);
-    font-size: clamp(1.75rem, 3.2vw, 2.85rem);
+    font-size: clamp(1.95rem, 1.2rem + 3.6vw, 4rem);
     line-height: 1.08;
-    letter-spacing: -0.02em;
-    font-variation-settings: "opsz" 96, "SOFT" 30;
-    font-weight: 400;
+    letter-spacing: -0.022em;
+    font-weight: 600;
+  }
+  .display-lg { /* títulos de seção: 26px → 42px */
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 1.25rem + 1.6vw, 2.625rem);
+    line-height: 1.15;
+    letter-spacing: -0.018em;
+    font-weight: 600;
+  }
+  .display-md { /* subtítulos: 19px → 24px */
+    font-family: var(--font-display);
+    font-size: clamp(1.1875rem, 1.05rem + 0.5vw, 1.5rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-weight: 600;
   }
   .eyebrow {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
   }
   .lead {
-    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
-    line-height: 1.6;
+    font-size: clamp(1rem, 0.95rem + 0.3vw, 1.125rem);
+    line-height: 1.65;
   }
-  .hairline { height: 1px; background: currentColor; opacity: 0.18; }
+  .hairline { height: 1px; background: currentColor; opacity: 0.15; }
 
-  /* Ruído sutil para superfícies (sem imagens externas) */
-  .grain { position: relative; isolation: isolate; }
-  .grain::after {
-    content: "";
-    position: absolute; inset: 0; z-index: -1; pointer-events: none;
-    opacity: 0.05;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  /* Revelação discreta ao entrar na viewport (ver components/motion/reveal).
+     Só é armada via JS para elementos abaixo da dobra: sem JS, tudo aparece. */
+  [data-armed] [data-reveal],
+  [data-armed]:not(:has([data-reveal])) {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+    transition:
+      opacity 0.6s var(--ease-out-quart),
+      transform 0.6s var(--ease-out-quart);
+    transition-delay: calc(var(--i, 0) * 70ms);
   }
+  [data-armed][data-shown] [data-reveal],
+  [data-armed][data-shown]:not(:has([data-reveal])) {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Destaque do programa: o desafio é riscado e o pilar surge em seguida. */
+  .strike::after {
+    content: "";
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 54%;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--brand-blue);
+    transform-origin: left center;
+  }
+  [data-armed] .pair .strike::after {
+    transform: scaleX(0);
+    transition: transform 0.55s var(--ease-out-quart);
+    transition-delay: calc(var(--i, 0) * 160ms + 300ms);
+  }
+  [data-armed] .pair .pair-target {
+    opacity: 0;
+    transform: translate3d(8px, 0, 0);
+    transition: opacity 0.5s var(--ease-out-quart), transform 0.5s var(--ease-out-quart);
+    transition-delay: calc(var(--i, 0) * 160ms + 650ms);
+  }
+  [data-armed][data-shown] .pair .strike::after { transform: none; }
+  [data-armed][data-shown] .pair .pair-target { opacity: 1; transform: none; }
+
+  /* Linha que conecta as etapas de "Como funciona". */
+  .steps-line { transform-origin: left center; }
+  [data-armed] .steps-line { transform: scaleX(0); transition: transform 0.9s var(--ease-out-quart) 0.2s; }
+  [data-armed][data-shown] .steps-line { transform: none; }
 }
 
 /* Modo apresentação: oculta elementos secundários */
 html[data-presentation="true"] [data-secondary] { display: none !important; }
-html[data-presentation="true"] .demo-banner { top: 5.5rem; bottom: auto; }
+html[data-presentation="true"] .demo-banner { top: 4.75rem; bottom: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

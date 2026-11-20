@@ -83,7 +83,7 @@ export function ProtocolTracker({ initialProtocol = "" }: { initialProtocol?: st
             initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="mt-4 rounded-2xl bg-destructive/8 px-4 py-3 text-sm text-destructive"
+            className="mt-4 rounded-xl bg-destructive/8 px-4 py-3 text-sm text-destructive"
           >
             {error}
           </motion.p>
@@ -99,15 +99,15 @@ export function ProtocolTracker({ initialProtocol = "" }: { initialProtocol?: st
             aria-live="polite"
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <p className="font-display text-2xl text-petrol">{data.label}</p>
+              <p className="font-display text-2xl text-navy">{data.label}</p>
               <p className="text-sm text-ink/55">Enviado em {formatDate(data.createdAt)}</p>
             </div>
 
             <ol className="grid grid-cols-4 gap-2" aria-label="Andamento">
               {ORDER.map((s, i) => (
                 <li key={s} className="space-y-2" aria-current={i === stepIndex ? "step" : undefined}>
-                  <span className={cn("block h-1.5 rounded-full", i <= stepIndex ? "bg-petrol" : "bg-petrol/12")} />
-                  <span className={cn("block text-xs leading-tight", i <= stepIndex ? "font-semibold text-petrol" : "text-ink/45")}>
+                  <span className={cn("block h-1.5 rounded-full", i <= stepIndex ? "bg-navy" : "bg-navy/12")} />
+                  <span className={cn("block text-xs leading-tight", i <= stepIndex ? "font-semibold text-navy" : "text-ink/45")}>
                     {SUBMISSION_STATUSES[s]}
                   </span>
                 </li>
@@ -117,14 +117,14 @@ export function ProtocolTracker({ initialProtocol = "" }: { initialProtocol?: st
             <div>
               <p className="text-sm font-semibold text-ink">Devolutivas da gestão</p>
               {data.responses.length === 0 ? (
-                <p className="mt-3 rounded-2xl border border-dashed border-petrol/20 px-4 py-5 text-sm text-ink/55">
+                <p className="mt-3 rounded-xl border border-dashed border-navy/20 px-4 py-5 text-sm text-ink/55">
                   Ainda não há uma devolutiva registrada. Volte a consultar com o mesmo protocolo.
                 </p>
               ) : (
                 <ul className="mt-3 space-y-3">
                   {data.responses.map((r, i) => (
-                    <li key={i} className="rounded-2xl bg-sage-2/70 p-4">
-                      <p className="flex items-center gap-2 text-xs font-semibold text-petrol">
+                    <li key={i} className="rounded-xl bg-mist/70 p-4">
+                      <p className="flex items-center gap-2 text-xs font-semibold text-navy">
                         <MessageSquareText className="size-4" /> {formatDateTime(r.createdAt)}
                       </p>
                       <p className="mt-2 whitespace-pre-line text-[0.95rem] text-ink">{r.body}</p>

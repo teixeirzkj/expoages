@@ -22,7 +22,15 @@ const CATEGORY_HINTS: Record<OuvidoriaCategory, string> = {
   outro: "Qualquer outro assunto",
 };
 
-export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => void; onClose: () => void }) {
+export function OuvidoriaForm({
+  onTrack,
+  onClose,
+  closeLabel,
+}: {
+  onTrack: (p: string) => void;
+  onClose: () => void;
+  closeLabel?: string;
+}) {
   const [step, setStep] = useState(0);
   const [category, setCategory] = useState<OuvidoriaCategory | "">("");
   const [topic, setTopic] = useState("");
@@ -75,6 +83,7 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
         message="Obrigado por compartilhar. A gestão responsável vai analisar o relato e poderá registrar uma devolutiva vinculada ao protocolo."
         onTrack={onTrack}
         onClose={onClose}
+        closeLabel={closeLabel}
       />
     );
   }
@@ -96,9 +105,9 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={step}
-            initial={{ opacity: 0, x: 24 }}
+            initial={{ opacity: 0, x: 10 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -24 }}
+            exit={{ opacity: 0, x: -10 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="space-y-8"
           >
@@ -158,7 +167,7 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
 
             {step === 2 && (
               <>
-                <dl className="divide-y divide-petrol/10 rounded-3xl border border-petrol/12 bg-ivory">
+                <dl className="divide-y divide-navy/10 rounded-2xl border border-navy/12 bg-cream">
                   {[
                     ["Tipo", category ? OUVIDORIA_CATEGORIES[category] : "—"],
                     ["Tema", topic],
@@ -171,24 +180,24 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
                   ))}
                   <div className="px-5 py-4">
                     <dt className="text-sm text-ink/55">Descrição</dt>
-                    <dd className="mt-2 max-h-40 overflow-y-auto whitespace-pre-line text-[0.95rem] text-ink" data-lenis-prevent>
+                    <dd className="mt-2 max-h-40 overflow-y-auto whitespace-pre-line text-[0.95rem] text-ink">
                       {description}
                     </dd>
                   </div>
                 </dl>
-                <div className="flex gap-3 rounded-2xl bg-sage-2/70 p-4 text-sm text-petrol">
+                <div className="flex gap-3 rounded-xl bg-mist/70 p-4 text-sm text-navy">
                   <ShieldCheck className="mt-0.5 size-5 shrink-0" />
                   <p>
                     Não pedimos nome, e-mail, telefone ou cadastro, e a aplicação não grava seu endereço de rede. Mesmo assim,
                     detalhes muito específicos no texto podem indicar quem escreveu.
                   </p>
                 </div>
-                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-petrol/15 p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-terracotta">
+                <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-navy/15 p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-blue">
                   <input
                     type="checkbox"
                     checked={confirm}
                     onChange={(e) => setConfirm(e.target.checked)}
-                    className="mt-0.5 size-5 shrink-0 accent-[var(--brand-petrol)]"
+                    className="mt-0.5 size-5 shrink-0 accent-[var(--brand-navy)]"
                   />
                   <span className="text-[0.95rem] text-ink">
                     Revisei minha mensagem e confirmo o envio. Entendo que ela será lida pela gestão autorizada.
@@ -201,9 +210,9 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
         </AnimatePresence>
       </div>
 
-      <div className="sticky bottom-0 -mx-6 mt-8 flex items-center justify-between gap-3 border-t border-petrol/10 bg-card/95 px-6 py-4 backdrop-blur md:-mx-10 md:px-10">
+      <div className="mt-8 flex items-center justify-between gap-3 border-t border-navy/10 pt-5">
         {step > 0 ? (
-          <ActionButton variant="ghost" className="text-petrol" onClick={back} disabled={pending}>
+          <ActionButton variant="ghost" className="text-navy" onClick={back} disabled={pending}>
             <ArrowLeft className="size-4" /> Voltar
           </ActionButton>
         ) : (
@@ -214,7 +223,7 @@ export function OuvidoriaForm({ onTrack, onClose }: { onTrack: (p: string) => vo
             Continuar
           </ActionButton>
         ) : (
-          <ActionButton type="submit" variant="terracotta" disabled={pending} aria-busy={pending}>
+          <ActionButton type="submit" disabled={pending} aria-busy={pending}>
             {pending ? <LoaderCircle className="size-4 animate-spin" /> : null}
             {pending ? "Enviando…" : "Enviar manifestação"}
           </ActionButton>

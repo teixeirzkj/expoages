@@ -11,9 +11,9 @@ import { cn } from "@/lib/utils";
 import { PriorityBadge } from "./ui";
 
 const COLUMNS: { status: ActionStatus; tone: string }[] = [
-  { status: "planejada", tone: "bg-ivory-2" },
+  { status: "planejada", tone: "bg-cream-2" },
   { status: "em_andamento", tone: "bg-[#fdf1d9]" },
-  { status: "concluida", tone: "bg-sage-2" },
+  { status: "concluida", tone: "bg-mist" },
 ];
 
 function Card({ action, mode }: { action: ActionPlan; mode: DataMode }) {
@@ -44,7 +44,7 @@ function Card({ action, mode }: { action: ActionPlan; mode: DataMode }) {
       animate={{ opacity: pending ? 0.6 : 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.96 }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      className="rounded-2xl bg-card p-4 shadow-[0_1px_0_rgba(23,58,60,0.06),0_10px_30px_-24px_rgba(20,36,43,0.5)] ring-1 ring-petrol/8"
+      className="rounded-2xl bg-card p-4 shadow-[0_1px_0_rgba(19,25,54,0.06),0_10px_30px_-24px_rgba(19,25,54,0.5)] ring-1 ring-navy/8"
     >
       <div className="flex flex-wrap items-center gap-2">
         <PriorityBadge priority={action.priority} />
@@ -57,15 +57,15 @@ function Card({ action, mode }: { action: ActionPlan; mode: DataMode }) {
         {action.dueDate && <div className="flex items-center gap-1.5"><CalendarClock className="size-3.5" /><dt className="sr-only">Prazo</dt><dd>Prazo: {formatDate(action.dueDate)}</dd></div>}
         {action.linkedReference && <div className="flex items-center gap-1.5"><Link2 className="size-3.5" /><dt className="sr-only">Protocolo</dt><dd className="font-mono">{action.linkedReference}</dd></div>}
       </dl>
-      <div className="mt-4 flex items-center justify-between gap-2 border-t border-petrol/8 pt-3">
+      <div className="mt-4 flex items-center justify-between gap-2 border-t border-navy/8 pt-3">
         <button type="button" onClick={remove} disabled={pending} aria-label="Excluir ação" className="flex size-9 items-center justify-center rounded-full text-ink/45 hover:bg-destructive/10 hover:text-destructive">
           <Trash2 className="size-4" />
         </button>
         <div className="flex gap-1.5">
-          <button type="button" onClick={() => move(-1)} disabled={pending || idx === 0} aria-label="Mover para a coluna anterior" className="flex size-9 items-center justify-center rounded-full ring-1 ring-petrol/15 disabled:opacity-30">
+          <button type="button" onClick={() => move(-1)} disabled={pending || idx === 0} aria-label="Mover para a coluna anterior" className="flex size-9 items-center justify-center rounded-full ring-1 ring-navy/15 disabled:opacity-30">
             <ArrowLeft className="size-4" />
           </button>
-          <button type="button" onClick={() => move(1)} disabled={pending || idx === COLUMNS.length - 1} aria-label="Mover para a próxima coluna" className="flex h-9 items-center gap-1.5 rounded-full bg-petrol px-3 text-xs font-semibold text-ivory disabled:opacity-30">
+          <button type="button" onClick={() => move(1)} disabled={pending || idx === COLUMNS.length - 1} aria-label="Mover para a próxima coluna" className="flex h-9 items-center gap-1.5 rounded-full bg-navy px-3 text-xs font-semibold text-cream disabled:opacity-30">
             Avançar <ArrowRight className="size-3.5" />
           </button>
         </div>
@@ -91,7 +91,7 @@ export function ActionBoard({ actions, mode }: { actions: ActionPlan[]; mode: Da
                   <Card key={a.id} action={a} mode={mode} />
                 ))}
               </AnimatePresence>
-              {items.length === 0 && <li className="rounded-2xl border border-dashed border-petrol/15 px-4 py-8 text-center text-sm text-ink/45">Nenhuma ação aqui.</li>}
+              {items.length === 0 && <li className="rounded-2xl border border-dashed border-navy/15 px-4 py-8 text-center text-sm text-ink/45">Nenhuma ação aqui.</li>}
             </ul>
           </section>
         );

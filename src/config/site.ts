@@ -41,9 +41,8 @@ export type SiteConfig = typeof siteConfig;
 
 export const navItems = [
   { id: "inicio", label: "Início" },
-  { id: "programa", label: "O Programa" },
-  { id: "como-funciona", label: "Como Funciona" },
-  { id: "ouvidoria", label: "Ouvidoria" },
-  { id: "reconhecimento", label: "Reconhecimento" },
-  { id: "sobre", label: "Sobre o Projeto" },
+  { id: "programa", label: "O programa" },
+  { id: "como-funciona", label: "Como funciona" },
+  { id: "participe", label: "Participe" },
+  { id: "sobre", label: "Sobre o projeto" },
 ] as const;

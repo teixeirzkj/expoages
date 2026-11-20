@@ -12,10 +12,10 @@ async function AdminUserBadge() {
   if (!admin) return null;
   return (
     <div className="space-y-2">
-      <p className="truncate text-sm font-semibold text-ivory">{admin.displayName}</p>
-      <p className="truncate text-xs text-ivory/50">{admin.email}</p>
+      <p className="truncate text-sm font-semibold text-cream">{admin.displayName}</p>
+      <p className="truncate text-xs text-cream/50">{admin.email}</p>
       <form action={signOut}>
-        <button type="submit" className="mt-1 inline-flex items-center gap-2 text-sm text-ivory/60 hover:text-ivory">
+        <button type="submit" className="mt-1 inline-flex items-center gap-2 text-sm text-cream/60 hover:text-cream">
           <LogOut className="size-4" /> Sair
         </button>
       </form>
@@ -25,8 +25,8 @@ async function AdminUserBadge() {
 
 function DemoFooter() {
   return (
-    <Link href="/apresentacao" className="block rounded-xl bg-terracotta/15 p-3 text-xs leading-relaxed text-ivory/80 hover:bg-terracotta/25">
-      <span className="mb-1 flex items-center gap-1.5 font-semibold text-terracotta">
+    <Link href="/apresentacao" className="block rounded-xl bg-sky/15 p-3 text-xs leading-relaxed text-cream/80 hover:bg-sky/25">
+      <span className="mb-1 flex items-center gap-1.5 font-semibold text-sky">
         <FlaskConical className="size-3.5" /> Dados fictícios
       </span>
       Ambiente de demonstração separado do painel real. Abrir roteiro →
@@ -37,12 +37,12 @@ function DemoFooter() {
 /** Estrutura do painel: sidebar + conteúdo. O conteúdo de cada tela carrega em streaming. */
 export function AdminShell({ mode, children }: { mode: DataMode; children: ReactNode }) {
   return (
-    <div className="min-h-dvh bg-ivory lg:flex">
+    <div className="min-h-dvh bg-cream lg:flex">
       <AdminSidebar
         mode={mode}
         footer={
           mode === "live" ? (
-            <Suspense fallback={<div className="h-14 animate-pulse rounded-xl bg-ivory/5" />}>
+            <Suspense fallback={<div className="h-14 animate-pulse rounded-xl bg-cream/5" />}>
               <AdminUserBadge />
             </Suspense>
           ) : (
@@ -52,7 +52,7 @@ export function AdminShell({ mode, children }: { mode: DataMode; children: React
       />
       <div className="min-w-0 flex-1">
         {mode === "demo" && (
-          <div role="status" className="flex items-center justify-center gap-2 bg-terracotta/20 px-4 py-2 text-center text-xs font-medium text-ink">
+          <div role="status" className="flex items-center justify-center gap-2 bg-sky px-4 py-2 text-center text-xs font-medium text-navy">
             <FlaskConical className="size-3.5 shrink-0" />
             Visualização demonstrativa · todos os registros são fictícios e ficam apenas na memória do servidor
           </div>

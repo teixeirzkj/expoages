@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const field =
-  "w-full rounded-xl border border-petrol/15 bg-card px-3 text-base focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20";
+  "w-full rounded-xl border border-navy/15 bg-card px-3 text-base focus:border-navy focus:outline-none focus:ring-4 focus:ring-sky/20";
 
 interface Defaults {
   title?: string;
@@ -63,23 +63,23 @@ export function ActionFormDialog({
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
         className={cn(
-          "inline-flex h-11 items-center gap-2 rounded-full bg-petrol px-5 text-sm font-semibold text-ivory transition-colors hover:bg-charcoal",
+          "inline-flex h-11 items-center gap-2 rounded-full bg-navy px-5 text-sm font-semibold text-cream transition-colors hover:bg-navy",
           triggerClassName,
         )}
       >
         <Plus className="size-4" /> {triggerLabel}
       </Dialog.Trigger>
       <Dialog.Portal>
-        <Dialog.Backdrop className="fixed inset-0 z-50 bg-charcoal/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
+        <Dialog.Backdrop className="fixed inset-0 z-50 bg-navy/50 transition-opacity data-[ending-style]:opacity-0 data-[starting-style]:opacity-0" />
         <Dialog.Popup className="fixed left-1/2 top-1/2 z-50 max-h-[92dvh] w-[min(40rem,94vw)] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-3xl bg-card p-6 shadow-2xl transition-[opacity,scale] data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0 md:p-8">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <Dialog.Title className="font-display text-2xl text-petrol">Registrar ação de melhoria</Dialog.Title>
+              <Dialog.Title className="font-display text-2xl text-navy">Registrar ação de melhoria</Dialog.Title>
               <Dialog.Description className="mt-1 text-sm text-ink/60">
                 Transforme o que foi ouvido em uma providência com responsável e prazo.
               </Dialog.Description>
             </div>
-            <Dialog.Close className="flex size-10 shrink-0 items-center justify-center rounded-full bg-ivory-2" aria-label="Fechar">
+            <Dialog.Close className="flex size-10 shrink-0 items-center justify-center rounded-full bg-cream-2" aria-label="Fechar">
               <X className="size-4" />
             </Dialog.Close>
           </div>
@@ -143,8 +143,8 @@ export function ActionFormDialog({
               />
             </label>
             <div className="flex justify-end gap-2 pt-2 sm:col-span-2">
-              <Dialog.Close className="h-11 rounded-full px-5 text-sm font-medium text-ink/70 hover:bg-ivory-2">Cancelar</Dialog.Close>
-              <button type="submit" disabled={pending} className="inline-flex h-11 items-center gap-2 rounded-full bg-terracotta px-6 text-sm font-semibold text-ink disabled:opacity-50">
+              <Dialog.Close className="h-11 rounded-full px-5 text-sm font-medium text-ink/70 hover:bg-cream-2">Cancelar</Dialog.Close>
+              <button type="submit" disabled={pending} className="inline-flex h-11 items-center gap-2 rounded-full bg-navy px-6 text-sm font-semibold text-white hover:bg-blue disabled:opacity-50">
                 {pending && <LoaderCircle className="size-4 animate-spin" />}
                 Salvar ação
               </button>

@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { signIn, type LoginState } from "@/app/actions/auth";
 
 const field =
-  "h-13 w-full rounded-2xl border border-petrol/15 bg-card px-4 text-base focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20";
+  "h-13 w-full rounded-2xl border border-navy/15 bg-card px-4 text-base focus:border-navy focus:outline-none focus:ring-4 focus:ring-sky/20";
 
 export function LoginForm() {
   const [state, action, pending] = useActionState<LoginState, FormData>(signIn, undefined);
@@ -27,7 +27,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="flex h-13 w-full items-center justify-center gap-2 rounded-full bg-petrol font-semibold text-ivory transition-colors hover:bg-charcoal disabled:opacity-60"
+        className="flex h-13 w-full items-center justify-center gap-2 rounded-full bg-navy font-semibold text-cream transition-colors hover:bg-navy disabled:opacity-60"
       >
         {pending ? <LoaderCircle className="size-4 animate-spin" /> : <LogIn className="size-4" />}
         Entrar

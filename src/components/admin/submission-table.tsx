@@ -15,7 +15,7 @@ import { formatDateTime, truncate } from "@/lib/format";
 import { EmptyState, StatusBadge } from "./ui";
 
 const control =
-  "h-11 rounded-xl border border-petrol/15 bg-card px-3 text-sm focus:border-petrol focus:outline-none focus:ring-4 focus:ring-terracotta/20";
+  "h-11 rounded-xl border border-navy/15 bg-card px-3 text-sm focus:border-navy focus:outline-none focus:ring-4 focus:ring-sky/20";
 
 export function SubmissionFiltersBar({
   action,
@@ -67,13 +67,13 @@ export function SubmissionFiltersBar({
         Até
         <input type="date" name="ate" defaultValue={filters.to} className={control} />
       </label>
-      <button type="submit" className="h-11 rounded-xl bg-petrol px-4 text-sm font-semibold text-ivory">Filtrar</button>
+      <button type="submit" className="h-11 rounded-xl bg-navy px-4 text-sm font-semibold text-cream">Filtrar</button>
       {hasFilters && (
-        <Link href={action} className="flex h-11 items-center gap-1.5 rounded-xl px-3 text-sm text-ink/60 hover:bg-ivory-2">
+        <Link href={action} className="flex h-11 items-center gap-1.5 rounded-xl px-3 text-sm text-ink/60 hover:bg-cream-2">
           <X className="size-4" /> Limpar
         </Link>
       )}
-      <a href={exportHref} className="ml-auto flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-medium text-petrol ring-1 ring-petrol/15 hover:bg-ivory-2">
+      <a href={exportHref} className="ml-auto flex h-11 items-center gap-2 rounded-xl px-4 text-sm font-medium text-navy ring-1 ring-navy/15 hover:bg-cream-2">
         <Download className="size-4" /> Exportar CSV
       </a>
     </Form>
@@ -89,10 +89,10 @@ export function SubmissionTable({ records, base, kind }: { records: SubmissionRe
     return <EmptyState title="Nenhum registro encontrado" text="Ajuste os filtros ou aguarde novos envios. A lista se atualiza automaticamente." />;
   }
   return (
-    <div className="overflow-hidden rounded-3xl bg-card ring-1 ring-petrol/8">
+    <div className="overflow-hidden rounded-3xl bg-card ring-1 ring-navy/8">
       {/* Tabela no desktop */}
       <table className="hidden w-full text-left text-sm md:table">
-        <thead className="border-b border-petrol/8 text-xs text-ink/55">
+        <thead className="border-b border-navy/8 text-xs text-ink/55">
           <tr>
             <th className="px-5 py-3 font-medium">Protocolo</th>
             <th className="px-3 py-3 font-medium">{kind === "ouvidoria" ? "Categoria" : "Tipo"}</th>
@@ -108,8 +108,8 @@ export function SubmissionTable({ records, base, kind }: { records: SubmissionRe
             const cat = r.kind === "ouvidoria" ? OUVIDORIA_CATEGORIES[r.category] : FEEDBACK_KINDS[r.feedbackKind];
             const body = r.kind === "ouvidoria" ? r.description : r.message;
             return (
-              <tr key={r.id} className="border-b border-petrol/5 last:border-0 hover:bg-ivory/60">
-                <td className="whitespace-nowrap px-5 py-4 font-mono text-xs font-semibold text-petrol">{r.reference}</td>
+              <tr key={r.id} className="border-b border-navy/5 last:border-0 hover:bg-cream/60">
+                <td className="whitespace-nowrap px-5 py-4 font-mono text-xs font-semibold text-navy">{r.reference}</td>
                 <td className="px-3 py-4 text-ink/75">{cat}</td>
                 <td className="max-w-md px-3 py-4">
                   <p className="font-medium text-ink">{r.topic}</p>
@@ -118,7 +118,7 @@ export function SubmissionTable({ records, base, kind }: { records: SubmissionRe
                 <td className="whitespace-nowrap px-3 py-4 text-ink/60">{formatDateTime(r.createdAt)}</td>
                 <td className="px-3 py-4"><StatusBadge status={r.status} /></td>
                 <td className="px-5 py-4 text-right">
-                  <Link href={href} className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-petrol ring-1 ring-petrol/15 hover:bg-petrol hover:text-ivory">
+                  <Link href={href} className="inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-xs font-semibold text-navy ring-1 ring-navy/15 hover:bg-navy hover:text-cream">
                     Visualizar <ArrowUpRight className="size-3.5" />
                   </Link>
                 </td>
@@ -129,14 +129,14 @@ export function SubmissionTable({ records, base, kind }: { records: SubmissionRe
       </table>
 
       {/* Lista em cartões no celular / iPad retrato estreito */}
-      <ul className="divide-y divide-petrol/8 md:hidden">
+      <ul className="divide-y divide-navy/8 md:hidden">
         {records.map((r) => {
           const body = r.kind === "ouvidoria" ? r.description : r.message;
           return (
             <li key={r.id}>
-              <Link href={`${base}/${r.id}`} className="block p-4 active:bg-ivory">
+              <Link href={`${base}/${r.id}`} className="block p-4 active:bg-cream">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="font-mono text-xs font-semibold text-petrol">{r.reference}</span>
+                  <span className="font-mono text-xs font-semibold text-navy">{r.reference}</span>
                   <StatusBadge status={r.status} />
                 </div>
                 <p className="mt-2 font-medium text-ink">{r.topic}</p>

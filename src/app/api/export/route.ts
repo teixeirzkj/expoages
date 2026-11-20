@@ -5,6 +5,11 @@ import {
   ACTION_CATEGORIES,
   ACTION_PRIORITIES,
   ACTION_STATUSES,
+  COURSE_SHIFTS,
+  COURSES,
+  ENROLLMENT_STATUSES,
+  type CourseKey,
+  type EnrollmentStatus,
   FEEDBACK_KINDS,
   OUVIDORIA_CATEGORIES,
   SUBMISSION_STATUSES,
@@ -49,6 +54,15 @@ export async function GET(request: NextRequest) {
       csv = toCsv(
         ["Título", "Descrição", "Categoria", "Prioridade", "Responsável", "Status", "Prazo", "Protocolo relacionado", "Criada em"],
         rows.map((a) => [a.title, a.description, ACTION_CATEGORIES[a.category], ACTION_PRIORITIES[a.priority], a.owner, ACTION_STATUSES[a.status], a.dueDate, a.linkedReference, a.createdAt]),
+      );
+    } else if (tipo === "cursos") {
+      // Dados identificados: exportação apenas para a gestão organizar o contato.
+      const course = sp.curso && sp.curso in COURSES ? (sp.curso as CourseKey) : undefined;
+      const status = sp.status && sp.status in ENROLLMENT_STATUSES ? (sp.status as EnrollmentStatus) : undefined;
+      const rows = await repo.listEnrollments({ course, status, q: sp.q?.slice(0, 60) });
+      csv = toCsv(
+        ["Nome", "E-mail", "Curso", "Turno", "Área", "Status", "Inscrito em"],
+        rows.map((e) => [e.fullName, e.email, COURSES[e.course].label, COURSE_SHIFTS[e.shift], e.area, ENROLLMENT_STATUSES[e.status], e.createdAt]),
       );
     } else if (tipo === "pulso") {
       // Apenas agregados: respostas individuais nunca são exportadas.

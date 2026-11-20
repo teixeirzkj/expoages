@@ -20,7 +20,7 @@ export async function ReportsScreen({ mode, searchParams }: { mode: DataMode; se
     <div>
       <PageHeader eyebrow="Relatórios" title="Indicadores do período" description="Filtre por período, acompanhe a evolução e exporte os dados autorizados." />
 
-      <div className={`mb-6 flex items-center gap-3 rounded-2xl p-4 text-sm ${mode === "demo" ? "bg-terracotta/15 text-ink" : "bg-sage-2/60 text-petrol"}`}>
+      <div className={`mb-6 flex items-center gap-3 rounded-2xl p-4 text-sm ${mode === "demo" ? "bg-mist text-navy" : "bg-mist/60 text-navy"}`}>
         {mode === "demo" ? <FlaskConical className="size-5 shrink-0" /> : <Database className="size-5 shrink-0" />}
         {mode === "demo"
           ? "Dados demonstrativos: registros fictícios criados para a apresentação, somados aos envios feitos em modo demonstração."
@@ -29,7 +29,7 @@ export async function ReportsScreen({ mode, searchParams }: { mode: DataMode; se
 
       <PeriodFilter action={base} from={period.from} to={period.to} />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard tone="dark" label="Manifestações" value={ouv.length} />
         <MetricCard label="Feedbacks" value={fb.length} />
         <MetricCard label="Com ação ou concluídas" value={`${answered}%`} hint="Manifestações que avançaram além da análise" />
@@ -59,7 +59,7 @@ export async function ReportsScreen({ mode, searchParams }: { mode: DataMode; se
             ["acoes", "Plano de ações"],
             ["pulso", "Pulso (agregado)"],
           ].map(([tipo, label]) => (
-            <a key={tipo} href={q(tipo)} className="inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-petrol ring-1 ring-petrol/15 hover:bg-ivory-2">
+            <a key={tipo} href={q(tipo)} className="inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-medium text-navy ring-1 ring-navy/15 hover:bg-cream-2">
               <Download className="size-4" /> {label}
             </a>
           ))}

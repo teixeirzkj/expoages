@@ -16,15 +16,15 @@ function Toggle({ on, label, hint, icon, onChange, disabled }: { on: boolean; la
       aria-checked={on}
       onClick={onChange}
       disabled={disabled}
-      className="flex w-full items-center gap-4 rounded-2xl bg-ivory px-4 py-3.5 text-left disabled:opacity-60"
+      className="flex w-full items-center gap-4 rounded-2xl bg-cream px-4 py-3.5 text-left disabled:opacity-60"
     >
-      <span className="text-petrol">{icon}</span>
+      <span className="text-navy">{icon}</span>
       <span className="flex-1">
         <span className="block text-sm font-semibold text-ink">{label}</span>
         <span className="block text-xs text-ink/55">{hint}</span>
       </span>
-      <span className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors", on ? "bg-petrol" : "bg-petrol/20")}>
-        <span className={cn("absolute top-1 size-5 rounded-full bg-ivory shadow transition-all", on ? "left-6" : "left-1")} />
+      <span className={cn("relative h-7 w-12 shrink-0 rounded-full transition-colors", on ? "bg-navy" : "bg-navy/20")}>
+        <span className={cn("absolute top-1 size-5 rounded-full bg-cream shadow transition-all", on ? "left-6" : "left-1")} />
       </span>
     </button>
   );
@@ -64,7 +64,7 @@ export function DemoControls({ supabaseConfigured }: { supabaseConfigured: boole
             toast.success("Demonstração reiniciada");
           });
         }}
-        className="inline-flex h-11 items-center gap-2 rounded-full bg-terracotta px-5 text-sm font-semibold text-ink disabled:opacity-50"
+        className="inline-flex h-11 items-center gap-2 rounded-full bg-navy px-5 text-sm font-semibold text-white hover:bg-blue disabled:opacity-50"
       >
         <RotateCcw className="size-4" /> Reiniciar demonstração
       </button>

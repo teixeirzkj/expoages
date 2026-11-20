@@ -12,7 +12,11 @@ const SECTIONS = [
   },
   {
     h: "O que coletamos",
-    p: "Somente o que você escreve nos formulários: tipo, tema, descrição e avaliações opcionais. Não pedimos nome, e-mail, telefone, CPF ou cadastro. As respostas do pulso guardam apenas a data (sem horário).",
+    p: "Na ouvidoria, no feedback e na pesquisa: somente o que você escreve nos formulários (tipo, tema, descrição e avaliações opcionais). Não pedimos nome, e-mail, telefone, CPF ou cadastro. As respostas da pesquisa guardam apenas a data (sem horário).",
+  },
+  {
+    h: "Inscrição em cursos",
+    p: "A inscrição em cursos profissionalizantes é o único formulário identificado: pede nome, e-mail, curso, turno e, opcionalmente, a área. Esses dados são usados apenas para o contato sobre o curso, mediante sua autorização, ficam em uma tabela separada das mensagens anônimas e só a gestão autorizada pode lê-los ou excluí-los. Para pedir a exclusão, fale com a coordenação do programa.",
   },
   {
     h: "O que a aplicação não grava",
@@ -38,17 +42,17 @@ const SECTIONS = [
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-dvh bg-ivory py-16">
+    <main className="min-h-dvh bg-cream py-16">
       <article className="container-editorial max-w-3xl">
         <Link href="/" className="inline-flex items-center gap-2 text-sm text-ink/60 hover:text-ink">
           <ArrowLeft className="size-4" /> Voltar ao site
         </Link>
-        <p className="eyebrow mt-12 text-terracotta-2">Privacidade</p>
-        <h1 className="display-lg mt-4 text-petrol">Como tratamos o que você compartilha</h1>
-        <div className="mt-12 divide-y divide-petrol/10 border-y border-petrol/10">
+        <p className="eyebrow mt-12 text-blue">Privacidade</p>
+        <h1 className="display-lg mt-4 text-navy">Como tratamos o que você compartilha</h1>
+        <div className="mt-12 divide-y divide-navy/10 border-y border-navy/10">
           {SECTIONS.map((s) => (
             <section key={s.h} className="grid gap-3 py-7 md:grid-cols-[12rem_1fr] md:gap-8">
-              <h2 className="font-semibold text-petrol">{s.h}</h2>
+              <h2 className="font-semibold text-navy">{s.h}</h2>
               <p className="leading-relaxed text-ink/75">{s.p}</p>
             </section>
           ))}

@@ -18,8 +18,8 @@ import { PULSE_QUESTIONS, PULSE_SCALE } from "@/lib/domain";
 
 /** Ordem categórica fixa (ver tokens --chart-* em globals.css). */
 const C = ["var(--chart-1)", "var(--chart-2)", "var(--chart-3)", "var(--chart-4)"];
-/** Rampa sequencial de uma só matiz (verde-azulado), do claro ao escuro. */
-const SEQ = ["#d3ecec", "#9fd5d7", "#5fb7bb", "#21969c", "#0b6a6f"];
+/** Rampa sequencial de uma só matiz (azul da marca), do claro ao escuro. */
+const SEQ = ["#dfe4f5", "#b3bfe6", "#8095d1", "#4f68b8", "#2b3f86"];
 const axis = { fontSize: 12, fill: "var(--chart-axis)" };
 
 type TipProps = {
@@ -32,12 +32,12 @@ type TipProps = {
 function TooltipBox({ active, payload, label, unit = "" }: TipProps) {
   if (!active || !payload?.length) return null;
   return (
-    <div className="rounded-xl bg-charcoal px-3 py-2 text-xs text-ivory shadow-lg">
+    <div className="rounded-xl bg-navy px-3 py-2 text-xs text-cream shadow-lg">
       {label !== undefined && <p className="mb-1 font-semibold">{String(label)}</p>}
       {payload.map((p) => (
         <p key={String(p.dataKey)} className="flex items-center gap-2">
           <span className="size-2 rounded-full" style={{ background: p.color }} />
-          <span className="text-ivory/75">{String(p.name)}</span>
+          <span className="text-cream/75">{String(p.name)}</span>
           <span className="ml-auto pl-3 font-semibold tabular-nums">
             {String(p.value)}
             {unit}
@@ -70,7 +70,7 @@ export function DataTable({ caption, head, rows }: { caption: string; head: stri
         <table className="w-full text-left text-xs">
           <caption className="sr-only">{caption}</caption>
           <thead>
-            <tr className="border-b border-petrol/10 text-ink/55">
+            <tr className="border-b border-navy/10 text-ink/55">
               {head.map((h) => (
                 <th key={h} className="py-1.5 pr-4 font-medium">{h}</th>
               ))}
@@ -78,7 +78,7 @@ export function DataTable({ caption, head, rows }: { caption: string; head: stri
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <tr key={i} className="border-b border-petrol/5">
+              <tr key={i} className="border-b border-navy/5">
                 {r.map((c, j) => (
                   <td key={j} className="py-1.5 pr-4 tabular-nums">{c}</td>
                 ))}
@@ -110,7 +110,7 @@ export function WeeklyChart({ data }: { data: WeeklyDatum[] }) {
           <CartesianGrid vertical={false} stroke="var(--chart-grid)" />
           <XAxis dataKey="week" tick={axis} tickLine={false} axisLine={false} />
           <YAxis allowDecimals={false} tick={axis} tickLine={false} axisLine={false} />
-          <Tooltip cursor={{ fill: "rgba(23,58,60,0.05)" }} content={(p) => <TooltipBox {...p} />} />
+          <Tooltip cursor={{ fill: "rgba(19,25,54,0.05)" }} content={(p) => <TooltipBox {...p} />} />
           <Bar dataKey="ouvidoria" name="Ouvidoria" fill={C[0]} radius={[4, 4, 0, 0]} maxBarSize={20} />
           <Bar dataKey="feedback" name="Feedbacks" fill={C[1]} radius={[4, 4, 0, 0]} maxBarSize={20} />
         </BarChart>
@@ -134,7 +134,7 @@ export function HBarChart({ data, unit = "", max }: { data: CountDatum[]; unit?:
           <CartesianGrid horizontal={false} stroke="var(--chart-grid)" />
           <XAxis type="number" hide domain={[0, max ?? "dataMax"]} allowDecimals={false} />
           <YAxis type="category" dataKey="label" width={170} tick={axis} tickLine={false} axisLine={false} />
-          <Tooltip cursor={{ fill: "rgba(23,58,60,0.05)" }} content={(p) => <TooltipBox {...p} unit={unit} />} />
+          <Tooltip cursor={{ fill: "rgba(19,25,54,0.05)" }} content={(p) => <TooltipBox {...p} unit={unit} />} />
           <Bar dataKey="value" name="Total" fill={C[0]} radius={[0, 4, 4, 0]} maxBarSize={18}>
             <LabelList dataKey="value" position="right" style={{ fontSize: 12, fill: "var(--brand-ink)" }} />
           </Bar>
@@ -194,7 +194,7 @@ export function PulseDistributionChart({ summary }: { summary: PulseSummary }) {
         <BarChart data={data} layout="vertical" stackOffset="expand" margin={{ top: 0, right: 8, left: 0, bottom: 0 }} barCategoryGap="30%">
           <XAxis type="number" hide />
           <YAxis type="category" dataKey="label" width={150} tick={axis} tickLine={false} axisLine={false} />
-          <Tooltip cursor={{ fill: "rgba(23,58,60,0.05)" }} content={(p) => <TooltipBox {...p} unit="%" />} />
+          <Tooltip cursor={{ fill: "rgba(19,25,54,0.05)" }} content={(p) => <TooltipBox {...p} unit="%" />} />
           {PULSE_SCALE.map((s, i) => (
             <Bar
               key={s.value}

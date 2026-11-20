@@ -32,7 +32,7 @@ export async function OverviewScreen({ mode }: { mode: DataMode }) {
         actions={<AutoRefresh />}
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard tone="dark" label="Manifestações" value={st.total} icon={Inbox} hint="Total recebido na ouvidoria" />
         <MetricCard label="Pendentes" value={st.recebido} icon={Inbox} hint="Aguardando primeira análise" />
         <MetricCard label="Em análise" value={st.em_analise + st.acao_planejada} icon={Clock3} hint={`${st.acao_planejada} com ação planejada`} />
@@ -60,16 +60,16 @@ export async function OverviewScreen({ mode }: { mode: DataMode }) {
         <Panel
           title="Registros recentes"
           className="xl:col-span-3"
-          action={<Link href={`${base}/ouvidoria`} className="text-sm font-medium text-petrol hover:underline">Ver todos</Link>}
+          action={<Link href={`${base}/ouvidoria`} className="text-sm font-medium text-navy hover:underline">Ver todos</Link>}
         >
           {recent.length === 0 ? (
             <EmptyState title="Nenhum registro" text="Os envios aparecerão aqui automaticamente." />
           ) : (
-            <ul className="divide-y divide-petrol/8">
+            <ul className="divide-y divide-navy/8">
               {recent.map((r) => (
                 <li key={r.id}>
-                  <Link href={`${base}/${r.kind === "ouvidoria" ? "ouvidoria" : "feedbacks"}/${r.id}`} className="flex items-center gap-4 py-3.5 hover:bg-ivory/50">
-                    <span className="w-24 shrink-0 font-mono text-[0.7rem] font-semibold text-petrol">{r.reference}</span>
+                  <Link href={`${base}/${r.kind === "ouvidoria" ? "ouvidoria" : "feedbacks"}/${r.id}`} className="flex items-center gap-4 py-3.5 hover:bg-cream/50">
+                    <span className="w-24 shrink-0 font-mono text-[0.7rem] font-semibold text-navy">{r.reference}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-medium text-ink">{r.topic}</span>
                       <span className="block truncate text-xs text-ink/50">
@@ -93,7 +93,7 @@ export async function OverviewScreen({ mode }: { mode: DataMode }) {
               { href: `${base}/pulso`, label: "Ver pulso organizacional", n: pulseData.sample },
             ].map((s) => (
               <li key={s.href}>
-                <Link href={s.href} className="group flex min-h-14 items-center justify-between gap-3 rounded-2xl bg-ivory px-4 hover:bg-sage-2">
+                <Link href={s.href} className="group flex min-h-14 items-center justify-between gap-3 rounded-2xl bg-cream px-4 hover:bg-mist">
                   <span className="text-sm font-medium text-ink">{s.label}</span>
                   <span className="flex items-center gap-2 text-sm tabular-nums text-ink/55">
                     {s.n}

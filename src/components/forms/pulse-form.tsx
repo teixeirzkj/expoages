@@ -45,7 +45,7 @@ export function PulseForm() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-[2rem] bg-card p-6 shadow-[0_30px_80px_-50px_rgba(20,36,43,0.55)] sm:p-10">
+    <div className="relative">
       <Honeypot value={anti.website} onChange={anti.setWebsite} />
       <AnimatePresence mode="wait" initial={false}>
         {done ? (
@@ -56,17 +56,17 @@ export function PulseForm() {
             className="py-6 text-center"
             aria-live="polite"
           >
-            <p className="font-display text-[clamp(2rem,4vw,3rem)] leading-tight text-petrol">Obrigado por participar.</p>
+            <p className="display-md text-navy">Obrigado por participar.</p>
             <p className="mx-auto mt-4 max-w-md text-ink/65">
               Suas respostas são anônimas e aparecem apenas em indicadores agregados, exibidos somente quando há um
               número mínimo de participações.
             </p>
             {done === "demo" && (
-              <p className="mx-auto mt-4 max-w-md rounded-xl bg-sage-2 px-4 py-2 text-xs text-petrol">
+              <p className="mx-auto mt-4 max-w-md rounded-xl bg-mist px-4 py-2 text-xs text-navy">
                 Modo demonstração: resposta registrada no ambiente fictício.
               </p>
             )}
-            <ActionButton variant="outline" className="mt-8 text-petrol" onClick={restart}>
+            <ActionButton variant="outline" className="mt-8 text-navy" onClick={restart}>
               <RotateCcw className="size-4" /> Responder novamente
             </ActionButton>
           </motion.div>
@@ -79,7 +79,7 @@ export function PulseForm() {
                     key={x.key}
                     className={cn(
                       "h-1.5 rounded-full transition-all duration-500",
-                      i === index ? "w-8 bg-petrol" : answers[x.key] ? "w-3 bg-petrol/60" : "w-3 bg-petrol/15",
+                      i === index ? "w-8 bg-navy" : answers[x.key] ? "w-3 bg-navy/60" : "w-3 bg-navy/15",
                     )}
                   />
                 ))}
@@ -98,9 +98,9 @@ export function PulseForm() {
                 transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                 className="mt-8"
               >
-                <p className="eyebrow text-terracotta-2">{q.dimension}</p>
+                <p className="eyebrow text-blue">{q.dimension}</p>
                 <legend className="sr-only">{q.question}</legend>
-                <p aria-hidden className="mt-3 font-display text-[clamp(1.7rem,3.4vw,2.6rem)] leading-tight text-petrol">
+                <p aria-hidden className="mt-2 font-display text-[clamp(1.25rem,1rem+1vw,1.625rem)] font-semibold leading-snug text-navy">
                   {q.question}
                 </p>
                 <div className="mt-8 grid grid-cols-5 gap-2 sm:gap-3" role="radiogroup" aria-label={q.question}>
@@ -114,12 +114,12 @@ export function PulseForm() {
                         aria-checked={checked}
                         onClick={() => choose(s.value)}
                         className={cn(
-                          "flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl border px-1 py-3 transition-[background-color,border-color,color,transform] duration-200 active:scale-95",
-                          checked ? "border-petrol bg-petrol text-ivory" : "border-petrol/15 bg-ivory text-petrol hover:border-petrol/40",
+                          "flex min-h-20 flex-col items-center justify-center gap-2 rounded-xl border px-1 py-3 transition-[background-color,border-color,color,transform] duration-200 active:scale-95",
+                          checked ? "border-navy bg-navy text-cream" : "border-navy/15 bg-cream text-navy hover:border-navy/40",
                         )}
                       >
-                        <span className="font-display text-2xl tabular-nums sm:text-3xl">{s.value}</span>
-                        <span className={cn("text-[0.7rem] leading-tight sm:text-xs", checked ? "text-ivory/80" : "text-ink/55")}>{s.label}</span>
+                        <span className="font-display text-xl font-semibold tabular-nums sm:text-2xl">{s.value}</span>
+                        <span className={cn("text-[0.7rem] leading-tight sm:text-xs", checked ? "text-cream/80" : "text-ink/55")}>{s.label}</span>
                       </button>
                     );
                   })}
@@ -128,11 +128,11 @@ export function PulseForm() {
             </AnimatePresence>
 
             <div className="mt-8 flex items-center justify-between gap-3">
-              <ActionButton variant="ghost" className="text-petrol" onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0}>
+              <ActionButton variant="ghost" className="text-navy" onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0}>
                 <ArrowLeft className="size-4" /> Anterior
               </ActionButton>
               {index === total - 1 && (
-                <ActionButton variant="terracotta" onClick={send} disabled={!complete || pending} aria-busy={pending}>
+                <ActionButton onClick={send} disabled={!complete || pending} aria-busy={pending}>
                   {pending && <LoaderCircle className="size-4 animate-spin" />}
                   {pending ? "Enviando…" : "Enviar respostas"}
                 </ActionButton>

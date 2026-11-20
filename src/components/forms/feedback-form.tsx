@@ -43,10 +43,12 @@ export function FeedbackForm({
   initialKind,
   onTrack,
   onClose,
+  closeLabel,
 }: {
   initialKind: FeedbackKind;
   onTrack: (p: string) => void;
   onClose: () => void;
+  closeLabel?: string;
 }) {
   const [feedbackKind, setKind] = useState<FeedbackKind>(initialKind);
   const [topic, setTopic] = useState("");
@@ -89,6 +91,7 @@ export function FeedbackForm({
         }
         onTrack={onTrack}
         onClose={onClose}
+        closeLabel={closeLabel}
       />
     );
   }
@@ -144,7 +147,7 @@ export function FeedbackForm({
               onClick={() => setArea(a)}
               className={cn(
                 "min-h-11 rounded-full border px-4 text-sm transition-colors",
-                area === a ? "border-petrol bg-petrol text-ivory" : "border-petrol/15 text-ink/75 hover:border-petrol/40",
+                area === a ? "border-navy bg-navy text-cream" : "border-navy/15 text-ink/75 hover:border-navy/40",
               )}
             >
               {a || "Prefiro não informar"}
@@ -170,9 +173,9 @@ export function FeedbackForm({
         <ScaleInput name={copy.rating} value={rating} onChange={setRating} labels={copy.labels} />
       </FieldShell>
 
-      <div className="sticky bottom-0 -mx-6 flex items-center justify-between gap-3 border-t border-petrol/10 bg-card/95 px-6 py-4 backdrop-blur md:-mx-10 md:px-10">
+      <div className="flex items-center justify-between gap-3 border-t border-navy/10 pt-5">
         <span className="text-xs text-ink/45">Sem identificação pessoal</span>
-        <ActionButton type="submit" variant="terracotta" disabled={pending} aria-busy={pending}>
+        <ActionButton type="submit" disabled={pending} aria-busy={pending}>
           {pending ? <LoaderCircle className="size-4 animate-spin" /> : <Send className="size-4" />}
           {pending ? "Enviando…" : "Enviar"}
         </ActionButton>
