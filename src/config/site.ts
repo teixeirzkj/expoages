@@ -8,9 +8,18 @@ export const siteConfig = {
   platformTagline: "Programa de Reconhecimento e Valorização Profissional",
   centralMessage: "Valorizar pessoas começa por ouvi-las.",
 
-  /** Logo: deixe `logoSrc` vazio para usar a marca provisória em SVG. */
-  logoSrc: "",
-  logoAlt: "Logotipo do projeto",
+  /**
+   * Logotipo. style "oficial" usa as artes do grupo em public/brand;
+   * "classico" volta à marca demonstrativa original em SVG.
+   */
+  logo: {
+    style: "oficial" as "oficial" | "classico",
+    onLight: "/brand/logo-horizonte-azul.webp", // logo azul → fundos claros (creme/branco)
+    onDark: "/brand/logo-horizonte-creme.webp", // logo creme → fundos azul-marinho
+    width: 860,
+    height: 240,
+    alt: "Horizonte — Reconhecimento & Valorização",
+  },
 
   company: {
     name: "Horizonte Soluções Integradas Ltda.",
@@ -25,12 +34,21 @@ export const siteConfig = {
     title:
       "Programa de Reconhecimento e Valorização Profissional: Uma Sugestão para Melhorar a Saúde dos Funcionários da Empresa",
     course: "Gestão de Comportamento de Pessoas",
-    institution: "", // ex.: "Nome da Instituição"
+    institution: "Centro Universitário AGES",
     institutionLogoSrc: "",
-    advisor: "", // professor(a) orientador(a)
-    members: [] as string[], // ["Integrante 1", "Integrante 2"]
+    advisor: "Ionne Oliveira Souza", // professor(a) orientador(a)
+    members: [
+      "Alani da Silva",
+      "Ana Clara",
+      "Caroline Pires",
+      "Eduarda Capim",
+      "Ênila Gabriele",
+      "Gabriel Santos",
+      "Kauan Lucas",
+      "Sofia Vitória",
+    ] as string[],
     event: "ExpoAgro",
-    year: "",
+    year: "2026",
   },
 
   /** Limite mínimo de respostas para exibir indicadores agregados. */

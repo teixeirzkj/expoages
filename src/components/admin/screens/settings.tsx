@@ -46,7 +46,7 @@ export async function SettingsScreen({ mode }: { mode: DataMode }) {
           </ul>
           <dl className="mt-6 space-y-2 text-sm">
             <div className="flex justify-between gap-4"><dt className="text-ink/55">Nome da plataforma</dt><dd className="font-medium">{siteConfig.platformName}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-ink/55">Logotipo</dt><dd className="font-medium">{siteConfig.logoSrc || "Marca provisória (SVG)"}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-ink/55">Logotipo</dt><dd className="font-medium">{siteConfig.logo.style === "oficial" ? "Logo oficial do grupo" : "Marca clássica (SVG)"}</dd></div>
             <div className="flex justify-between gap-4"><dt className="text-ink/55">Tipografia</dt><dd className="font-medium">Fraunces + Manrope</dd></div>
           </dl>
         </Panel>

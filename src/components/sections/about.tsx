@@ -98,7 +98,6 @@ export function About() {
     { k: "Disciplina", v: a.course },
     { k: "Instituição", v: a.institution },
     { k: "Orientação", v: a.advisor },
-    { k: "Integrantes", v: a.members.join(", ") },
     { k: "Evento", v: [a.event, a.year].filter(Boolean).join(" · ") },
   ];
 
@@ -125,6 +124,18 @@ export function About() {
               </div>
             ))}
           </dl>
+          <div data-reveal className="mt-4 rounded-[var(--radius-card)] bg-white p-5 ring-1 ring-navy/8">
+            <p className="text-sm text-slate">Integrantes</p>
+            {a.members.length ? (
+              <ul className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1.5 text-[0.9375rem] font-medium text-ink">
+                {a.members.map((m) => (
+                  <li key={m}>{m}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-1 italic text-slate">A definir</p>
+            )}
+          </div>
           {a.institutionLogoSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={a.institutionLogoSrc} alt={`Logo ${a.institution}`} className="mt-6 h-10 w-auto" />
